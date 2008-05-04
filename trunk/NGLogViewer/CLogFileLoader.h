@@ -5,9 +5,20 @@
 #include <vector>
 #include <string>
 #include <hash_set>
+#include <set>
 
 using namespace std;
 using namespace stdext;
+
+
+class CLineBuffer 
+{
+public:
+	int m_nLineNumber;
+	int m_nProcess;
+	float m_Time;
+	wstring m_wstrMessage;
+};
 
 class CLogFileLoader
 {
@@ -15,7 +26,7 @@ class CLogFileLoader
 private:
 	wstring m_wstrFilename;
 	hash_set<wstring> m_setWstrTags;
-	vector<int> m_vecIntProcessNumber;
+	set<int> m_setIntProcessNumber;
 	
 	//Filter:
 	vector<wstring> m_vecWstrFilterTags;
@@ -29,6 +40,7 @@ private:
 	int GetProcessNumber(wchar_t *wszBuffer);
 	float GetTime(wchar_t *wszBuffer);
 	int GetLineNumber(wchar_t *wszBuffer);
+	int GetLineBufferData(wchar_t *wszBuffer, class CLineBuffer *pCLineBuffer); 
 
 
 public:
