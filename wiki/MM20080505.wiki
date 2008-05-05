@@ -1,0 +1,38 @@
+#summary One-sentence summary of this page.
+
+= Introduction =
+
+Gary, Ning at 景美夜市 85度C
+
+
+= Details =
+
+MM at 20080505
+
+Simple UI defined:
+
+Main Panel: Just like dbgview
+
+Secord Panel: include multiple tabs and (de)select all and run buttons.
+
+Tab 2-1 Tag list
+
+Tab 2-2 Process list
+
+Tab 2-3 Key word (Include/Exclude)
+
+Tab 2-4 Time filter
+    * Input start time
+    * Input end time
+
+    Tab 2-5 Line number filter 
+    * Input start line
+    * Input end line
+    
+functional spec:
+
+* load file
+* color line view
+* scroll bar of view
+* save as function
+* Ctrl + F
