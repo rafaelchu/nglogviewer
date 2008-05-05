@@ -9,7 +9,7 @@ Gary, Ning at 景美夜市 85度C
 
 MM at 20080505
 
-Simple UI defined:
+== Simple UI defined: ==
 
 Main Panel: Just like dbgview
 
@@ -25,14 +25,13 @@ Tab 2-4 Time filter
     * Input start time
     * Input end time
 
-    Tab 2-5 Line number filter 
+Tab 2-5 Line number filter 
     * Input start line
     * Input end line
     
-functional spec:
-
-* load file
-* color line view
-* scroll bar of view
-* save as function
-* Ctrl + F
+== Functional spec: ==
+    * load file
+    * color line view
+    * scroll bar of view
+    * save as function
+    * Ctrl + F
