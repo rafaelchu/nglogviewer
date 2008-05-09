@@ -1,8 +1,9 @@
 #include "CLogFileLoader.h"
 #include <fstream>
 #include <iostream>
+#include <algorithm>
 
-#define LINE_BUFFER_SIZE	2048
+
 using namespace std;
 
 int CLogFileLoader::PreProcessing()
@@ -17,12 +18,30 @@ int CLogFileLoader::PreProcessing()
 
 	wchar_t wszLineBuffer[LINE_BUFFER_SIZE];
 	class CLineBuffer *pCLineBuffer = new CLineBuffer();
+	int nIndex = 0;
 	while(wiFile.getline(wszLineBuffer, LINE_BUFFER_SIZE))
 	{
 		GetLineBufferData(wszLineBuffer, pCLineBuffer);
-		m_setWstrTags.insert(pCLineBuffer->m_wstrMessage);
+		//1. Preprocess the Max/min line number
+		{
+			if (nIndex ==0)
+			{
+				m_nMaxLineNumber = pCLineBuffer->m_nLineNumber;
+				m_nMinLineNumber = pCLineBuffer->m_nLineNumber;
+			}
+			else
+			{
+				if (pCLineBuffer->m_nLineNumber> m_nMaxLineNumber)
+					m_nMaxLineNumber = pCLineBuffer->m_nLineNumber;
+			}
+		}
+
+		//2. Preprocess tags and process number
+		m_setWstrTags.insert(pCLineBuffer->m_wstrTag);
 		m_setIntProcessNumber.insert(pCLineBuffer->m_nProcess);
+		nIndex++;
 	}
+	m_nTotalLines = nIndex;
 
 	delete pCLineBuffer;
 	return 0;
@@ -52,6 +71,12 @@ CLogFileLoader::~CLogFileLoader()
 
 void CLogFileLoader::PrintInfo()
 {
+	//Prinet member var
+	wprintf(L"Path:%s\n", m_wstrFilename.c_str());
+	wprintf(L"Min Line number:%d\n", m_nMinLineNumber);
+	wprintf(L"Max Line number:%d\n", m_nMaxLineNumber);
+	wprintf(L"====================================\n");
+
 	//List All Tags
 	vector<wstring>::iterator vecWstrIter;
 	int i =0;
@@ -78,13 +103,65 @@ void CLogFileLoader::PrintInfo()
 
 int CLogFileLoader::GetLineBufferData(wchar_t *wszBuffer, class CLineBuffer *pCLineBuffer)
 {
-	wchar_t wszSkip[LINE_BUFFER_SIZE]={0};
 	wchar_t wszString[LINE_BUFFER_SIZE]={0};
-	swscanf(wszBuffer, L"%d %f [%d] %s", &pCLineBuffer->m_nLineNumber, &pCLineBuffer->m_Time, &pCLineBuffer->m_nProcess, wszString);
+	swscanf(wszBuffer, L"%d %f [%d]", &pCLineBuffer->m_nLineNumber, &pCLineBuffer->m_Time, &pCLineBuffer->m_nProcess);
+	wchar_t *pWstr;
+	pWstr = wcschr(wszBuffer, '[');
+	pCLineBuffer->m_wstrMessage = pWstr;
+	if (pCLineBuffer->m_nProcess != 0)
+	{
+		pWstr = wcschr(wszBuffer, ']');
+		if (pWstr ==NULL)
+		{
+			wszString[0] = '\0';
+		}
+		else
+		{
+			pWstr++;	//empty char
+			pWstr++;	//'['
+			if (pWstr!=NULL)
+			{
+				wcscpy(wszString,pWstr);
+				CleanAsTag(wszString);
+			}
+		}
+	}
+	
+	pCLineBuffer->m_wstrTag = wszString;
+	return 0;
+}
+
+void CLogFileLoader::CleanAsTag(wchar_t *wszString)
+{
+	//Clean tag String:
 	if (wszString[0] !='[')
 		wszString[0] = '\0';
-	pCLineBuffer->m_wstrMessage = wszString;
-	return 0;
+	else
+	{
+		wchar_t *pWstr=wszString;
+		do 
+		{
+			pWstr = wcschr(pWstr, ']');
+			if (pWstr==NULL)
+			{
+				break;
+			}
+			else
+			{
+				pWstr++;
+				if (*pWstr == '[')
+				{
+					continue;
+				}
+				else
+				{
+					*pWstr='\0';
+					break;
+				}
+			}
+		} while (true);
+
+	}
 }
 
 vector<int> CLogFileLoader::GetVecIntProcessNumber()
@@ -108,6 +185,7 @@ vector<wstring> CLogFileLoader::GetVecWstrTags()
 	{
 		vecWstrTags.push_back(*hsIter);
 	}
+	sort(vecWstrTags.begin(), vecWstrTags.end() );     
 	return vecWstrTags;
 }
 
@@ -115,5 +193,98 @@ int CLogFileLoader::ClearAll()
 {
 	m_setIntProcessNumber.clear();
 	m_setWstrTags.clear();
+	m_nMinLineNumber=0;
+	m_nMaxLineNumber=0;
 	return 0;
+}
+
+int CLogFileLoader::GetMinLineNumber()
+{
+	return m_nMinLineNumber;
+}
+
+int CLogFileLoader::GetMaxLineNumber()
+{
+	return m_nMaxLineNumber;
+}
+
+int CLogFileLoader::GetResultSize()
+{
+	return m_setResultLine.size();
+}
+
+int CLogFileLoader::RunFilterResult()
+{
+	m_setResultLine.clear();
+
+	wifstream wiFile(this->m_wstrFilename.c_str());
+	if (!wiFile)
+	{
+		return 0;
+	}
+
+	wchar_t wszLineBuffer[LINE_BUFFER_SIZE];
+	class CLineBuffer *pCLineBuffer = new CLineBuffer();
+	int nIndex = 0;
+	int llpos = wiFile.tellg();
+	while(wiFile.getline(wszLineBuffer, LINE_BUFFER_SIZE))
+	{
+		GetLineBufferData(wszLineBuffer, pCLineBuffer);
+		if (! IsFilterLine(pCLineBuffer))
+		{
+			m_setResultLine.insert(nIndex);
+			m_vecResultLinePos.push_back(llpos);
+		}
+		nIndex++;
+		llpos = wiFile.tellg();
+	}
+}
+
+bool CLogFileLoader::IsFilterLine(class CLineBuffer *pCLineBuffer)
+{
+	if (pCLineBuffer->m_nLineNumber< this->m_nStartLineNumber)
+		return true;
+	if (pCLineBuffer->m_nLineNumber> this->m_nEndLineNumber)
+		return true;
+
+	return false;
+}
+
+int CLogFileLoader::GetResultLine(int nLine, CLineBuffer *pCLineBuffer)
+{
+	wchar_t wszLineBuffer[LINE_BUFFER_SIZE];
+	GetResultLine(nLine,wszLineBuffer);
+	GetLineBufferData(wszLineBuffer, pCLineBuffer);
+	return 0;
+}
+
+int CLogFileLoader::GetResultLine(int nLine, wchar_t *wszLineBuffer)
+{
+	int llPos = m_vecResultLinePos[nLine];
+	wifstream wiFile(this->m_wstrFilename.c_str());
+	if (!wiFile)
+	{
+		return 1;
+	}
+	wiFile.seekg(llPos);
+	wiFile.getline(wszLineBuffer, LINE_BUFFER_SIZE);
+	return 0;
+}
+
+int CLogFileLoader::SetLineNumberFilter(int nStartLineNumber, int nEndLineNumber)
+{
+	m_nStartLineNumber = nStartLineNumber;
+	m_nEndLineNumber = nEndLineNumber;
+	return 0;
+}
+
+void CLogFileLoader::PrintResult()
+{
+	int nTotlal = this->GetResultSize();
+	wchar_t wstrBuffer[LINE_BUFFER_SIZE];
+	for (int i=0;i<nTotlal;++i)
+	{
+		this->GetResultLine(i, wstrBuffer);
+		wprintf(L"%s\n", wstrBuffer);
+	}
 }
