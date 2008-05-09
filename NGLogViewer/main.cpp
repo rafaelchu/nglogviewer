@@ -10,6 +10,9 @@ int main (int argc, char **argv)
 	cLogFileLoader.PreProcessing();
 	//print all tags
 	cLogFileLoader.PrintInfo();
-
+	cLogFileLoader.SetLineNumberFilter(10000, 20000);
+	cLogFileLoader.RunFilterResult();
+	cLogFileLoader.PrintResult();
+	system("PAUSE");
 	return 0;
 }
