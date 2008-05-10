@@ -1,4 +1,4 @@
-#Meeting Minute for kick off at 2008.05.05
+#summary Meeting Minute for kick off at 2008.05.05
 
 = Introduction =
 
