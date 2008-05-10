@@ -41,7 +41,7 @@ private:
 	float m_fMaxTime;
 
 	//Filter Setting:
-	vector<wstring> m_vecWstrFilterTags;
+	vector<wstring> * m_pVecWstrFilterTags;
 	vector<int> * m_pVecIntFilterProcessNumber;
 	int m_nStartLineNumber;
 	int m_nEndLineNumber;
@@ -52,7 +52,8 @@ private:
 	bool m_bEnableLineNumberFilter;
 	bool m_bEnableTimeFilter;
 	bool m_bEnableProcessFilter;
-
+	bool m_bEnableTagsFilter;
+	bool m_bEnableKillEmptyMessage;
 	bool m_bEnableOutputNoProcessNumber;
 
 	//Includer:
@@ -71,7 +72,8 @@ private:
 	bool IsFilterLineByLineNumber(class CLineBuffer *pCLineBuffer);
 	bool IsFilterLineByTime(class CLineBuffer *pCLineBuffer);
 	bool IsFilterLineByProcess(class CLineBuffer *pCLineBuffer);
-
+	bool IsFilterLineByTags(class CLineBuffer *pCLineBuffer);
+	
 public:
 	CLogFileLoader(wstring wstrFileName);
 	~CLogFileLoader();
