@@ -208,6 +208,7 @@ int CLogFileLoader::ClearAll()
 	m_bEnableOutputNoProcessNumber = false;
 	m_bEnableProcessFilter = false;
 	m_pVecIntFilterProcessNumber = NULL;
+	m_pVecWstrFilterTags = NULL;
 
 	return 0;
 }
@@ -263,6 +264,24 @@ bool CLogFileLoader::IsFilterLine(class CLineBuffer *pCLineBuffer)
 		return true;
 	if (m_bEnableProcessFilter && IsFilterLineByProcess(pCLineBuffer))
 		return true;
+	if (m_bEnableTagsFilter && IsFilterLineByTags(pCLineBuffer))
+		return true;
+	return false;
+}
+
+bool CLogFileLoader::IsFilterLineByTags(class CLineBuffer *pCLineBuffer)
+{
+	if (m_pVecWstrFilterTags==NULL)
+		return false;
+	vector<wstring>::iterator pos;
+	for (pos = m_pVecWstrFilterTags->begin();pos != m_pVecWstrFilterTags->end();++pos)
+	{
+		if (wcsstr(pCLineBuffer->m_wstrMessage.c_str(), pos->c_str()) != NULL)
+		{
+			return true;
+		}
+	}
+
 	return false;
 }
 
@@ -365,3 +384,11 @@ int CLogFileLoader::SetProcessFilter(vector<int> *pProcessFilter, bool bIncludeN
 	m_pVecIntFilterProcessNumber = pProcessFilter;
 	return 0;
 }
+
+int CLogFileLoader::SetTagsFilter(vector<wstring> *pTagsFilter)
+{
+	m_bEnableTagsFilter = true;
+	m_pVecWstrFilterTags = pTagsFilter;
+	return 0;
+}
+
