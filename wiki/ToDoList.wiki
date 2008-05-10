@@ -1,5 +1,5 @@
 #summary To do list
 = Idea or brain storming proble,=
 
- # How to get Tag?
+ # How to get Tag from a debug of string?
  
