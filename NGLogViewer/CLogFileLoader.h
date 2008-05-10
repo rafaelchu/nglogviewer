@@ -37,11 +37,20 @@ private:
 	int m_nMaxLineNumber;	
 	int m_nTotalLines;
 
+	float m_fMinTime;
+	float m_fMaxTime;
+
 	//Filter Setting:
 	vector<wstring> m_vecWstrFilterTags;
 	vector<int> m_vecIntFilterProcessNumber;
 	int m_nStartLineNumber;
 	int m_nEndLineNumber;
+
+	float m_fStartTime;
+	float m_fEndTime;
+
+	bool m_bEnableLineNumberFilter;
+	bool m_bEnableTimeFilter;
 
 	//Includer:
 	bool m_bIncludeAllTag;
@@ -53,7 +62,11 @@ private:
 	float GetTime(wchar_t *wszBuffer);
 	int GetLineNumber(wchar_t *wszBuffer);
 	int GetLineBufferData(wchar_t *wszBuffer, class CLineBuffer *pCLineBuffer); 
+
+	//Filter function:
 	bool IsFilterLine(class CLineBuffer *pCLineBuffer);
+	bool IsFilterLineByLineNumber(class CLineBuffer *pCLineBuffer);
+	bool IsFilterLineByTime(class CLineBuffer *pCLineBuffer);
 
 public:
 	CLogFileLoader(wstring wstrFileName);

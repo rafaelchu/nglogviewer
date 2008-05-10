@@ -11,6 +11,7 @@ int main (int argc, char **argv)
 	//print all tags
 	cLogFileLoader.PrintInfo();
 	cLogFileLoader.SetLineNumberFilter(10000, 20000);
+	//cLogFileLoader.SetTimeFilter(cLogFileLoader.GetMinTime()+20.0, cLogFileLoader.GetMinTime()+40.0);
 	cLogFileLoader.RunFilterResult();
 	cLogFileLoader.PrintResult();
 	system("PAUSE");

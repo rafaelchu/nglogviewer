@@ -28,11 +28,15 @@ int CLogFileLoader::PreProcessing()
 			{
 				m_nMaxLineNumber = pCLineBuffer->m_nLineNumber;
 				m_nMinLineNumber = pCLineBuffer->m_nLineNumber;
+				m_fMinTime = pCLineBuffer->m_Time;
+				m_fMaxTime = pCLineBuffer->m_Time;
 			}
 			else
 			{
 				if (pCLineBuffer->m_nLineNumber> m_nMaxLineNumber)
 					m_nMaxLineNumber = pCLineBuffer->m_nLineNumber;
+				if (pCLineBuffer->m_Time> m_fMaxTime)
+					m_fMaxTime = pCLineBuffer->m_Time;
 			}
 		}
 
@@ -75,6 +79,8 @@ void CLogFileLoader::PrintInfo()
 	wprintf(L"Path:%s\n", m_wstrFilename.c_str());
 	wprintf(L"Min Line number:%d\n", m_nMinLineNumber);
 	wprintf(L"Max Line number:%d\n", m_nMaxLineNumber);
+	wprintf(L"Min Time:%f\n", GetMinTime());
+	wprintf(L"Max Time:%f\n", GetMaxTime());
 	wprintf(L"====================================\n");
 
 	//List All Tags
@@ -195,6 +201,11 @@ int CLogFileLoader::ClearAll()
 	m_setWstrTags.clear();
 	m_nMinLineNumber=0;
 	m_nMaxLineNumber=0;
+	m_fMinTime=0.0;
+	m_fMaxTime=0.0;
+	m_bEnableLineNumberFilter = false;
+	m_bEnableTimeFilter = false;
+
 	return 0;
 }
 
@@ -242,11 +253,28 @@ int CLogFileLoader::RunFilterResult()
 
 bool CLogFileLoader::IsFilterLine(class CLineBuffer *pCLineBuffer)
 {
+	if (m_bEnableLineNumberFilter && IsFilterLineByLineNumber(pCLineBuffer))
+		return true;
+	if (m_bEnableTimeFilter && IsFilterLineByTime(pCLineBuffer))
+		return true;
+	return false;
+}
+
+bool CLogFileLoader::IsFilterLineByLineNumber(class CLineBuffer *pCLineBuffer)
+{
 	if (pCLineBuffer->m_nLineNumber< this->m_nStartLineNumber)
 		return true;
 	if (pCLineBuffer->m_nLineNumber> this->m_nEndLineNumber)
 		return true;
+	return false;
+}
 
+bool CLogFileLoader::IsFilterLineByTime(class CLineBuffer *pCLineBuffer)
+{
+	if (pCLineBuffer->m_Time< this->m_fStartTime)
+		return true;
+	if (pCLineBuffer->m_Time> this->m_fEndTime)
+		return true;
 	return false;
 }
 
@@ -273,6 +301,7 @@ int CLogFileLoader::GetResultLine(int nLine, wchar_t *wszLineBuffer)
 
 int CLogFileLoader::SetLineNumberFilter(int nStartLineNumber, int nEndLineNumber)
 {
+	m_bEnableLineNumberFilter = true;
 	m_nStartLineNumber = nStartLineNumber;
 	m_nEndLineNumber = nEndLineNumber;
 	return 0;
@@ -287,4 +316,23 @@ void CLogFileLoader::PrintResult()
 		this->GetResultLine(i, wstrBuffer);
 		wprintf(L"%s\n", wstrBuffer);
 	}
+}
+
+float CLogFileLoader::GetMinTime()
+{
+	return m_fMinTime;
+}
+
+float CLogFileLoader::GetMaxTime()
+{
+	return m_fMaxTime;
+}
+
+
+int CLogFileLoader::SetTimeFilter(float fStartTime, float fEndTime)
+{
+	m_bEnableTimeFilter = true;
+	m_fStartTime = fStartTime;
+	m_fEndTime = fEndTime;
+	return 0;
 }
