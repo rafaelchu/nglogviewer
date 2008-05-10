@@ -113,7 +113,7 @@ int CLogFileLoader::GetLineBufferData(wchar_t *wszBuffer, class CLineBuffer *pCL
 	swscanf(wszBuffer, L"%d %f [%d]", &pCLineBuffer->m_nLineNumber, &pCLineBuffer->m_Time, &pCLineBuffer->m_nProcess);
 	wchar_t *pWstr;
 	pWstr = wcschr(wszBuffer, '[');
-	pCLineBuffer->m_wstrMessage = pWstr;
+	
 	if (pCLineBuffer->m_nProcess != 0)
 	{
 		pWstr = wcschr(wszBuffer, ']');
@@ -125,6 +125,7 @@ int CLogFileLoader::GetLineBufferData(wchar_t *wszBuffer, class CLineBuffer *pCL
 		{
 			pWstr++;	//empty char
 			pWstr++;	//'['
+			pCLineBuffer->m_wstrMessage = pWstr;
 			if (pWstr!=NULL)
 			{
 				wcscpy(wszString,pWstr);
@@ -207,6 +208,7 @@ int CLogFileLoader::ClearAll()
 	m_bEnableTimeFilter = false;
 	m_bEnableOutputNoProcessNumber = false;
 	m_bEnableProcessFilter = false;
+	m_bEnableOutputEmptyMessage = false;
 	m_pVecIntFilterProcessNumber = NULL;
 	m_pVecWstrFilterTags = NULL;
 
@@ -258,6 +260,10 @@ int CLogFileLoader::RunFilterResult()
 
 bool CLogFileLoader::IsFilterLine(class CLineBuffer *pCLineBuffer)
 {
+	int a = pCLineBuffer->m_wstrMessage.length();
+	wchar_t tt = pCLineBuffer->m_wstrMessage.c_str()[0];
+	if (!m_bEnableOutputEmptyMessage && IsEmptyString(pCLineBuffer->m_wstrMessage.c_str()))
+		return true;
 	if (m_bEnableLineNumberFilter && IsFilterLineByLineNumber(pCLineBuffer))
 		return true;
 	if (m_bEnableTimeFilter && IsFilterLineByTime(pCLineBuffer))
@@ -392,3 +398,14 @@ int CLogFileLoader::SetTagsFilter(vector<wstring> *pTagsFilter)
 	return 0;
 }
 
+bool CLogFileLoader::IsEmptyString(const wchar_t * pwszStr)
+{
+	for(unsigned int i =0;i<wcslen(pwszStr);++i)
+	{
+		if (isspace(pwszStr[i])==0)
+		{
+			return false;
+		}
+	}
+	return true;
+}
