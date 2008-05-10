@@ -1,4 +1,4 @@
-#summary One-sentence summary of this page.
+#Meeting Minute for kick off at 2008.05.05
 
 = Introduction =
 
