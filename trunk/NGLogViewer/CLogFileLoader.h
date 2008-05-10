@@ -55,6 +55,7 @@ private:
 	bool m_bEnableTagsFilter;
 	bool m_bEnableKillEmptyMessage;
 	bool m_bEnableOutputNoProcessNumber;
+	bool m_bEnableOutputEmptyMessage;
 
 	//Includer:
 	bool m_bIncludeAllTag;
@@ -73,6 +74,8 @@ private:
 	bool IsFilterLineByTime(class CLineBuffer *pCLineBuffer);
 	bool IsFilterLineByProcess(class CLineBuffer *pCLineBuffer);
 	bool IsFilterLineByTags(class CLineBuffer *pCLineBuffer);
+
+	bool IsEmptyString(const wchar_t * pwszStr);
 	
 public:
 	CLogFileLoader(wstring wstrFileName);
