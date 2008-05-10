@@ -205,6 +205,9 @@ int CLogFileLoader::ClearAll()
 	m_fMaxTime=0.0;
 	m_bEnableLineNumberFilter = false;
 	m_bEnableTimeFilter = false;
+	m_bEnableOutputNoProcessNumber = false;
+	m_bEnableProcessFilter = false;
+	m_pVecIntFilterProcessNumber = NULL;
 
 	return 0;
 }
@@ -249,6 +252,7 @@ int CLogFileLoader::RunFilterResult()
 		nIndex++;
 		llpos = wiFile.tellg();
 	}
+	return 0;
 }
 
 bool CLogFileLoader::IsFilterLine(class CLineBuffer *pCLineBuffer)
@@ -256,6 +260,8 @@ bool CLogFileLoader::IsFilterLine(class CLineBuffer *pCLineBuffer)
 	if (m_bEnableLineNumberFilter && IsFilterLineByLineNumber(pCLineBuffer))
 		return true;
 	if (m_bEnableTimeFilter && IsFilterLineByTime(pCLineBuffer))
+		return true;
+	if (m_bEnableProcessFilter && IsFilterLineByProcess(pCLineBuffer))
 		return true;
 	return false;
 }
@@ -275,6 +281,21 @@ bool CLogFileLoader::IsFilterLineByTime(class CLineBuffer *pCLineBuffer)
 		return true;
 	if (pCLineBuffer->m_Time> this->m_fEndTime)
 		return true;
+	return false;
+}
+
+bool CLogFileLoader::IsFilterLineByProcess(class CLineBuffer *pCLineBuffer)
+{
+	if(m_pVecIntFilterProcessNumber == NULL)
+		return false;
+	if((m_bEnableOutputNoProcessNumber) && (pCLineBuffer->m_nLineNumber == 0))
+		return false;
+	vector<int>::iterator pos;
+	for (pos = m_pVecIntFilterProcessNumber->begin();pos!= m_pVecIntFilterProcessNumber->end() ;pos++)
+	{
+		if (*pos == pCLineBuffer->m_nProcess)
+			return true;
+	}
 	return false;
 }
 
@@ -334,5 +355,13 @@ int CLogFileLoader::SetTimeFilter(float fStartTime, float fEndTime)
 	m_bEnableTimeFilter = true;
 	m_fStartTime = fStartTime;
 	m_fEndTime = fEndTime;
+	return 0;
+}
+
+int CLogFileLoader::SetProcessFilter(vector<int> *pProcessFilter, bool bIncludeNoProcessFilter/* = false*/)
+{
+	m_bEnableProcessFilter = true;
+	m_bEnableOutputNoProcessNumber = bIncludeNoProcessFilter;
+	m_pVecIntFilterProcessNumber = pProcessFilter;
 	return 0;
 }
