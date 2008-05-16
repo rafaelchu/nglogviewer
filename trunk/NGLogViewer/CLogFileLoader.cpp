@@ -409,3 +409,19 @@ bool CLogFileLoader::IsEmptyString(const wchar_t * pwszStr)
 	}
 	return true;
 }
+
+bool CLogFileLoader::SaveResultAs(wstring wstrPathName)
+{
+	wofstream fwoFile(wstrPathName.c_str());
+	if (fwoFile.fail())
+		return false;
+	int nCount = this->GetResultSize();
+	wchar_t wszBuffer [LINE_BUFFER_SIZE];
+	for (int i = 0; i<nCount ;i++)
+	{
+		this->GetResultLine(i, wszBuffer);
+		fwoFile<< wszBuffer << endl;
+	}
+	fwoFile.close();
+	return true;
+}
