@@ -32,9 +32,10 @@ int main (int argc, char **argv)
 		vec2.push_back(L"EPG");
 		vec2.push_back(L"(SQL)");
 		cLogFileLoader.SetTagsFilter(&vec2);
-
+	
 	cLogFileLoader.RunFilterResult();
 	cLogFileLoader.PrintResult();
+	cLogFileLoader.SaveResultAs(L"C:\\AAA.txt");
 	//system("PAUSE");
 	return 0;
 }
