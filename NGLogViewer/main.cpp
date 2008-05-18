@@ -1,9 +1,16 @@
 
 #include "CLogFileLoader.h"
 #include "sattime.h"
-#include <hash_set>
 using namespace std;
+
+#ifdef WIN32
+#include <hash_set>
 using namespace stdext;
+#else
+#include <ext/hash_set>
+using namespace __gnu_cxx;
+#endif
+
 int main (int argc, char **argv)
 {
 	wstring wstr(L"C:\\all.LOG");
