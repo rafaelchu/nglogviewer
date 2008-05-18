@@ -4,11 +4,18 @@
 
 #include <vector>
 #include <string>
-#include <hash_set>
+
 #include <set>
 
 using namespace std;
+
+#ifdef WIN32
+#include <hash_set>
 using namespace stdext;
+#else
+#include <ext/hash_set>
+using namespace __gnu_cxx;
+#endif
 
 #define LINE_BUFFER_SIZE	2048
 
@@ -66,7 +73,7 @@ private:
 	int GetProcessNumber(wchar_t *wszBuffer);
 	float GetTime(wchar_t *wszBuffer);
 	int GetLineNumber(wchar_t *wszBuffer);
-	int GetLineBufferData(wchar_t *wszBuffer, class CLineBuffer *pCLineBuffer); 
+	int GetLineBufferData(wchar_t *wszBuffer, class CLineBuffer *pCLineBuffer, bool bTag = true); 
 
 	//Filter function:
 	bool IsFilterLine(class CLineBuffer *pCLineBuffer);

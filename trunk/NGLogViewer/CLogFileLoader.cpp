@@ -107,34 +107,41 @@ void CLogFileLoader::PrintInfo()
 
 }
 
-int CLogFileLoader::GetLineBufferData(wchar_t *wszBuffer, class CLineBuffer *pCLineBuffer)
+int CLogFileLoader::GetLineBufferData(wchar_t *wszBuffer, class CLineBuffer *pCLineBuffer, bool bTag)
 {
 	wchar_t wszString[LINE_BUFFER_SIZE]={0};
 	swscanf(wszBuffer, L"%d %f [%d]", &pCLineBuffer->m_nLineNumber, &pCLineBuffer->m_Time, &pCLineBuffer->m_nProcess);
-	wchar_t *pWstr;
-	pWstr = wcschr(wszBuffer, '[');
-	
-	if (pCLineBuffer->m_nProcess != 0)
+
+	if (bTag)
 	{
-		pWstr = wcschr(wszBuffer, ']');
-		if (pWstr ==NULL)
+		wchar_t *pWstr;
+		pWstr = wcschr(wszBuffer, '[');
+		if (pCLineBuffer->m_nProcess != 0)
 		{
-			wszString[0] = '\0';
-		}
-		else
-		{
-			pWstr++;	//empty char
-			pWstr++;	//'['
-			pCLineBuffer->m_wstrMessage = pWstr;
-			if (pWstr!=NULL)
+			pWstr = wcschr(wszBuffer, ']');
+			if (pWstr ==NULL)
 			{
-				wcscpy(wszString,pWstr);
-				CleanAsTag(wszString);
+				wszString[0] = '\0';
+			}
+			else
+			{
+				pWstr++;	//empty char
+				pWstr++;	//'['
+				pCLineBuffer->m_wstrMessage = pWstr;
+				if (pWstr!=NULL)
+				{
+					//wcscpy(wszString,pWstr);
+					CleanAsTag(pWstr);
+				}
 			}
 		}
+		pCLineBuffer->m_wstrTag = pWstr;
+	}
+	else
+	{
+		pCLineBuffer->m_wstrTag =L"";
 	}
 	
-	pCLineBuffer->m_wstrTag = wszString;
 	return 0;
 }
 
@@ -246,7 +253,7 @@ int CLogFileLoader::RunFilterResult()
 	int llpos = wiFile.tellg();
 	while(wiFile.getline(wszLineBuffer, LINE_BUFFER_SIZE))
 	{
-		GetLineBufferData(wszLineBuffer, pCLineBuffer);
+		GetLineBufferData(wszLineBuffer, pCLineBuffer, false);
 		if (! IsFilterLine(pCLineBuffer))
 		{
 			m_setResultLine.insert(nIndex);
@@ -260,8 +267,6 @@ int CLogFileLoader::RunFilterResult()
 
 bool CLogFileLoader::IsFilterLine(class CLineBuffer *pCLineBuffer)
 {
-	int a = pCLineBuffer->m_wstrMessage.length();
-	wchar_t tt = pCLineBuffer->m_wstrMessage.c_str()[0];
 	if (!m_bEnableOutputEmptyMessage && IsEmptyString(pCLineBuffer->m_wstrMessage.c_str()))
 		return true;
 	if (m_bEnableLineNumberFilter && IsFilterLineByLineNumber(pCLineBuffer))
