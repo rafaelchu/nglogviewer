@@ -3,7 +3,7 @@
 
 #pragma once
 
-#include "CLogFileLoader.h"
+#include "..\NGLogViewer\CLogFileLoader.h"
 typedef struct tagITEMINFO {
 	INT         nIndex;
 	CString     strData;
