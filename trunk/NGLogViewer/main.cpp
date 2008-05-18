@@ -1,15 +1,21 @@
 
 #include "CLogFileLoader.h"
+#include "sattime.h"
 #include <hash_set>
 using namespace std;
 using namespace stdext;
 int main (int argc, char **argv)
 {
 	wstring wstr(L"C:\\all.LOG");
+	sattime cTimeCheck;
+	cTimeCheck.restart();
 	CLogFileLoader cLogFileLoader(wstr);
+	cTimeCheck.printSecs("CLogFileLoader init");
+
 	cLogFileLoader.PreProcessing();
+	cTimeCheck.printSecs("CLogFileLoader preprocessing");
 	//print all tags
-	cLogFileLoader.PrintInfo();
+	//cLogFileLoader.PrintInfo();
 	
 	//Test case:
 	//cLogFileLoader.SetLineNumberFilter(10000, 20000);
@@ -33,9 +39,11 @@ int main (int argc, char **argv)
 		vec2.push_back(L"(SQL)");
 		cLogFileLoader.SetTagsFilter(&vec2);
 	
+	cTimeCheck.restart();
 	cLogFileLoader.RunFilterResult();
-	cLogFileLoader.PrintResult();
-	cLogFileLoader.SaveResultAs(L"C:\\AAA.txt");
+	cTimeCheck.printSecs("CLogFileLoader RunFilterResult ");
+	//cLogFileLoader.PrintResult();
+	//cLogFileLoader.SaveResultAs(L"C:\\AAA.txt");
 	//system("PAUSE");
 	return 0;
 }
