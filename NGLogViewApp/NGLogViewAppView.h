@@ -1,9 +1,13 @@
 // NGLogViewAppView.h : interface of the CNGLogViewAppView class
 //
 
-
 #pragma once
 
+#include "CLogFileLoader.h"
+typedef struct tagITEMINFO {
+	INT         nIndex;
+	CString     strData;
+} ITEMINFO;
 
 class CNGLogViewAppView : public CListView
 {
@@ -26,6 +30,8 @@ protected:
 
 // Implementation
 public:
+	//int Refresh(LPCWSTR lpwzPath);
+	int Refresh(LPCWSTR lpwzPath);
 	virtual ~CNGLogViewAppView();
 #ifdef _DEBUG
 	virtual void AssertValid() const;
@@ -33,6 +39,12 @@ public:
 #endif
 
 protected:
+	CLogFileLoader* m_pLogFileLoader;
+	void FreeItemMemory();
+	BOOL AddItem(int nIndex, wchar_t* wstrBuffer);
+	afx_msg void OnDestroy();
+	afx_msg void OnGetDispInfo(NMHDR* pNMHDR, LRESULT* pResult);
+	afx_msg void OnFileOpen();
 
 // Generated message map functions
 protected:
