@@ -139,6 +139,9 @@ int CLogFileLoader::GetLineBufferData(wchar_t *wszBuffer, class CLineBuffer *pCL
 	}
 	else
 	{
+		wchar_t *pWstr;
+		pWstr = wcschr(wszBuffer, '[');
+		pCLineBuffer->m_wstrMessage = pWstr;
 		pCLineBuffer->m_wstrTag =L"";
 	}
 	
