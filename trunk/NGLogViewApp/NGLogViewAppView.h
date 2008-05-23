@@ -40,6 +40,7 @@ public:
 
 protected:
 	CLogFileLoader* m_pLogFileLoader;
+	CFont   m_ft;   
 	void FreeItemMemory();
 	BOOL AddItem(int nIndex, wchar_t* wstrBuffer);
 	afx_msg void OnDestroy();
@@ -51,6 +52,7 @@ protected:
 	DECLARE_MESSAGE_MAP()
 public:
 	afx_msg void OnFileSaveAs();
+	afx_msg void OnEditFont();
 };
 
 #ifndef _DEBUG  // debug version in NGLogViewAppView.cpp

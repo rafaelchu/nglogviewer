@@ -22,6 +22,7 @@ BEGIN_MESSAGE_MAP(CNGLogViewAppView, CListView)
 	ON_NOTIFY_REFLECT(LVN_GETDISPINFO, OnGetDispInfo)
 	ON_COMMAND(ID_FILE_OPEN, OnFileOpen)
 	ON_COMMAND(ID_FILE_SAVE_AS, &CNGLogViewAppView::OnFileSaveAs)
+	ON_COMMAND(ID_EDIT_FONT, &CNGLogViewAppView::OnEditFont)
 END_MESSAGE_MAP()
 
 // CNGLogViewAppView construction/destruction
@@ -250,4 +251,16 @@ void CNGLogViewAppView::OnFileSaveAs()
 		}
 	}
 
+}
+
+void CNGLogViewAppView::OnEditFont()
+{
+	LOGFONT   lf;  
+	CFontDialog cfd;
+	if (cfd.DoModal()==IDOK)
+	{
+		cfd.GetCurrentFont(&lf);   
+		m_ft.CreateFontIndirect(&lf);   
+		GetListCtrl().SetFont(&m_ft, TRUE);
+	}
 }
