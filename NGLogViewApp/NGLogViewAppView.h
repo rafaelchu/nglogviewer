@@ -49,6 +49,8 @@ protected:
 // Generated message map functions
 protected:
 	DECLARE_MESSAGE_MAP()
+public:
+	afx_msg void OnFileSaveAs();
 };
 
 #ifndef _DEBUG  // debug version in NGLogViewAppView.cpp
