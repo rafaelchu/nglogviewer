@@ -21,6 +21,7 @@ BEGIN_MESSAGE_MAP(CNGLogViewAppView, CListView)
 	ON_WM_DESTROY()
 	ON_NOTIFY_REFLECT(LVN_GETDISPINFO, OnGetDispInfo)
 	ON_COMMAND(ID_FILE_OPEN, OnFileOpen)
+	ON_COMMAND(ID_FILE_SAVE_AS, &CNGLogViewAppView::OnFileSaveAs)
 END_MESSAGE_MAP()
 
 // CNGLogViewAppView construction/destruction
@@ -232,4 +233,21 @@ void CNGLogViewAppView::FreeItemMemory()
 		for (int i=0; i<nCount; i++)
 			delete (ITEMINFO*) GetListCtrl ().GetItemData (i);
 	}
+}
+
+void CNGLogViewAppView::OnFileSaveAs()
+{
+	CFileDialog dlg (FALSE, _T("txt, log"), _T("all.LOG"), OFN_FILEMUSTEXIST | OFN_HIDEREADONLY, _T("Log Files(*.log)|*.log|Text Files(*.txt)|*.txt|All Files(*.*)|*.*||"));
+	if(dlg.DoModal() == IDOK)
+	{
+		CString str = dlg.GetPathName();
+		if(str.GetLength() > 0)
+		{
+			TCHAR tszBuffer[LINE_BUFFER_SIZE];
+			wsprintf(tszBuffer,TEXT("%s"),str);
+			if (m_pLogFileLoader)
+				m_pLogFileLoader->SaveResultAs(tszBuffer);
+		}
+	}
+
 }
