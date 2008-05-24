@@ -65,8 +65,11 @@ void CNGLogViewAppView::OnInitialUpdate()
 	//  its list control through a call to GetListCtrl().
 	
 	// Add column
-	GetListCtrl ().InsertColumn (0, _T ("Line"), LVCFMT_LEFT,50);
-	GetListCtrl ().InsertColumn (1, _T ("Data"), LVCFMT_LEFT,2048);
+	GetListCtrl().InsertColumn(0, _T("Index"), LVCFMT_CENTER, 55);
+	GetListCtrl().InsertColumn(1, _T("Line"), LVCFMT_CENTER, 55);
+	GetListCtrl().InsertColumn(2, _T ("PID"), LVCFMT_CENTER, 45);
+	GetListCtrl().InsertColumn(3, _T("Time"), LVCFMT_CENTER, 75);
+	GetListCtrl().InsertColumn(4, _T("Message"), LVCFMT_LEFT, 2048);
 
 	// Add data
 	//	Refresh();
@@ -74,7 +77,6 @@ void CNGLogViewAppView::OnInitialUpdate()
 }
 void CNGLogViewAppView::OnGetDispInfo(NMHDR* pNMHDR, LRESULT* pResult) 
 {
-	CString string;
 	LV_DISPINFO* pDispInfo = (LV_DISPINFO*) pNMHDR;
 
 	if (pDispInfo->item.mask & LVIF_TEXT) {
@@ -84,13 +86,35 @@ void CNGLogViewAppView::OnGetDispInfo(NMHDR* pNMHDR, LRESULT* pResult)
 
 		case 0: // nIndex
 			{
+				CString string;
 				string.Format (_T ("%u"), pItem->nIndex);
 				::lstrcpy (pDispInfo->item.pszText, string);			
 			}
 			break;
-		case 1:
+		case 1: // line number
 			{
-				::lstrcpyn(pDispInfo->item.pszText, pItem->strData, _MAX_PATH);
+				CString string;
+				string.Format (_T ("%u"), pItem->nLineNumber);
+				::lstrcpy (pDispInfo->item.pszText, string);
+			}
+			break;
+		case 2: // PID
+			{
+				CString string;
+				string.Format (_T ("%u"), pItem->nProcessID);
+				::lstrcpy (pDispInfo->item.pszText, string);			
+			}
+			break;
+		case 3: // Time
+			{
+				CString string;
+				string.Format(_T("%f"), pItem->fTime);
+				::lstrcpy (pDispInfo->item.pszText, string);			
+			}
+			break;
+		case 4: // message
+			{
+				::lstrcpyn(pDispInfo->item.pszText, pItem->wstrMessage, _MAX_PATH);
 			}
 			break;
 		}
@@ -98,7 +122,7 @@ void CNGLogViewAppView::OnGetDispInfo(NMHDR* pNMHDR, LRESULT* pResult)
 	*pResult = 0;
 }
 
-BOOL CNGLogViewAppView::AddItem(int nIndex, wchar_t* wstrBuffer)
+BOOL CNGLogViewAppView::AddItem(int nIndex, CLineBuffer* pCLineBuffer)
 {
 	ITEMINFO* pItem;
 	try {
@@ -110,10 +134,15 @@ BOOL CNGLogViewAppView::AddItem(int nIndex, wchar_t* wstrBuffer)
 	}
 
 	pItem->nIndex = nIndex;
-	pItem->strData = wstrBuffer;
+	pItem->nLineNumber = pCLineBuffer->m_nLineNumber;
+	pItem->nProcessID = pCLineBuffer->m_nProcess;
+	pItem->fTime = pCLineBuffer->m_Time;
+	pItem->wstrTag = pCLineBuffer->m_wstrTag.c_str();
+	pItem->wstrMessage = pCLineBuffer->m_wstrMessage.c_str();
+	
 
 	LV_ITEM lvi;
-	lvi.mask = LVIF_TEXT | LVIF_IMAGE | LVIF_PARAM;
+	lvi.mask = LVIF_TEXT | LVIF_PARAM;
 	lvi.iItem = nIndex;
 	lvi.iSubItem = 0;
 	lvi.iImage = 0;
@@ -155,7 +184,6 @@ void CNGLogViewAppView::OnFileOpen()
 			CString strTitle = _T ("NGLogViewer - ");
 			strTitle += str;
 			AfxGetMainWnd ()->SetWindowText (strTitle);
-			//m_pLogFileLoader = new CLogFileLoader(tszBuffer);
 			Refresh(tszBuffer);
 		}
 	}
@@ -187,7 +215,7 @@ int CNGLogViewAppView::Refresh(LPCWSTR lpwzPath)
 	m_pLogFileLoader->PreProcessing();
 	
 	//List All Tags
-	vector<wstring>::iterator vecWstrIter;
+/*	vector<wstring>::iterator vecWstrIter;
 	int i =0;
 	vector<wstring> vecWstrTags= m_pLogFileLoader->GetVecWstrTags();
 	for ( vecWstrIter = vecWstrTags.begin(); vecWstrIter != vecWstrTags.end(), i < 10; ++vecWstrIter )
@@ -208,7 +236,7 @@ int CNGLogViewAppView::Refresh(LPCWSTR lpwzPath)
 		i++;
 		dprintf(L"%d:[%d]\n", i, *veciIter);
 	}
-
+*/
 	vector<wstring> vec2;
 	vec2.push_back(L"[CLSchMgr]");
 	vec2.push_back(L"[CLRec4]");
@@ -219,12 +247,13 @@ int CNGLogViewAppView::Refresh(LPCWSTR lpwzPath)
 
 	m_pLogFileLoader->RunFilterResult();
 	int nTotal = m_pLogFileLoader->GetResultSize();
-	wchar_t wstrBuffer[LINE_BUFFER_SIZE];	
+
+	CLineBuffer pBuffer;
 	for (int i=0;i<nTotal;++i)
 	{
-		m_pLogFileLoader->GetResultLine(i, wstrBuffer);
-		AddItem(i, wstrBuffer);
-
+		ZeroMemory(&pBuffer, sizeof(CLineBuffer));
+		m_pLogFileLoader->GetResultLine(i, &pBuffer);
+		AddItem(i, &pBuffer);
 	}
 	return nTotal;
 }
