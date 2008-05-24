@@ -1,7 +1,4 @@
 #include "CLogFileLoader.h"
-#include <fstream>
-#include <iostream>
-#include <algorithm>
 
 
 using namespace std;
@@ -9,9 +6,8 @@ using namespace std;
 int CLogFileLoader::PreProcessing()
 {
 	this->ClearAll();
-
-	wifstream wiFile(this->m_wstrFilename.c_str());
-	if (!wiFile)
+	m_wiFile.seekg(0);
+	if (!m_wiFile)
 	{
 		return 0;
 	}
@@ -19,7 +15,8 @@ int CLogFileLoader::PreProcessing()
 	wchar_t wszLineBuffer[LINE_BUFFER_SIZE];
 	class CLineBuffer *pCLineBuffer = new CLineBuffer();
 	int nIndex = 0;
-	while(wiFile.getline(wszLineBuffer, LINE_BUFFER_SIZE))
+	
+	while(m_wiFile.getline(wszLineBuffer, LINE_BUFFER_SIZE))
 	{
 		GetLineBufferData(wszLineBuffer, pCLineBuffer);
 		//1. Preprocess the Max/min line number
@@ -48,12 +45,19 @@ int CLogFileLoader::PreProcessing()
 	m_nTotalLines = nIndex;
 
 	delete pCLineBuffer;
+	pCLineBuffer = NULL;
+	m_wiFile.clear();
 	return 0;
 }
 
 CLogFileLoader::CLogFileLoader(wstring wstrFileName)
 {
-	this->m_wstrFilename = wstrFileName;
+	m_wstrFilename = wstrFileName;
+	m_wiFile.open(m_wstrFilename.c_str());
+	if (m_wiFile.bad())
+	{
+		printf("fail to load!");
+	}
 }
 
 wstring CLogFileLoader::GetTag(wchar_t *wszBuffer)
@@ -243,18 +247,14 @@ int CLogFileLoader::GetResultSize()
 int CLogFileLoader::RunFilterResult()
 {
 	m_setResultLine.clear();
-
-	wifstream wiFile(this->m_wstrFilename.c_str());
-	if (!wiFile)
-	{
-		return 0;
-	}
+	m_wiFile.seekg(0);
 
 	wchar_t wszLineBuffer[LINE_BUFFER_SIZE];
 	class CLineBuffer *pCLineBuffer = new CLineBuffer();
 	int nIndex = 0;
-	int llpos = wiFile.tellg();
-	while(wiFile.getline(wszLineBuffer, LINE_BUFFER_SIZE))
+
+	int llpos = m_wiFile.tellg();
+	while(m_wiFile.getline(wszLineBuffer, LINE_BUFFER_SIZE))
 	{
 		GetLineBufferData(wszLineBuffer, pCLineBuffer, false);
 		if (! IsFilterLine(pCLineBuffer))
@@ -263,8 +263,9 @@ int CLogFileLoader::RunFilterResult()
 			m_vecResultLinePos.push_back(llpos);
 		}
 		nIndex++;
-		llpos = wiFile.tellg();
+		llpos = m_wiFile.tellg();
 	}
+	m_wiFile.clear();
 	return 0;
 }
 
@@ -343,13 +344,9 @@ int CLogFileLoader::GetResultLine(int nLine, CLineBuffer *pCLineBuffer)
 int CLogFileLoader::GetResultLine(int nLine, wchar_t *wszLineBuffer)
 {
 	int llPos = m_vecResultLinePos[nLine];
-	wifstream wiFile(this->m_wstrFilename.c_str());
-	if (!wiFile)
-	{
-		return 1;
-	}
-	wiFile.seekg(llPos);
-	wiFile.getline(wszLineBuffer, LINE_BUFFER_SIZE);
+	m_wiFile.seekg(llPos);
+	m_wiFile.getline(wszLineBuffer, LINE_BUFFER_SIZE);
+	m_wiFile.clear();
 	return 0;
 }
 

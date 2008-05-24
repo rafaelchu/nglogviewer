@@ -155,7 +155,7 @@ void CNGLogViewAppView::OnFileOpen()
 			CString strTitle = _T ("NGLogViewer - ");
 			strTitle += str;
 			AfxGetMainWnd ()->SetWindowText (strTitle);
-			m_pLogFileLoader = new CLogFileLoader(tszBuffer);
+			//m_pLogFileLoader = new CLogFileLoader(tszBuffer);
 			Refresh(tszBuffer);
 		}
 	}
