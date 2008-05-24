@@ -51,6 +51,6 @@ int main (int argc, char **argv)
 	cTimeCheck.printSecs("CLogFileLoader RunFilterResult ");
 	//cLogFileLoader.PrintResult();
 	//cLogFileLoader.SaveResultAs(L"C:\\AAA.txt");
-	//system("PAUSE");
+	system("PAUSE");
 	return 0;
 }

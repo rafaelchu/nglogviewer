@@ -4,6 +4,9 @@
 
 #include <vector>
 #include <string>
+#include <fstream>
+#include <iostream>
+#include <algorithm>
 
 #include <set>
 
@@ -34,6 +37,8 @@ class CLogFileLoader
 
 private:
 	wstring m_wstrFilename;
+	wifstream m_wiFile;
+
 	hash_set<wstring> m_setWstrTags;
 	set<int> m_setIntProcessNumber;
 	set<int> m_setResultLine;
