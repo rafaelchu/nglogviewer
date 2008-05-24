@@ -222,12 +222,13 @@ int CLogFileLoader::ClearAll()
 	m_bEnableTimeFilter = false;
 	m_bEnableOutputNoProcessNumber = false;
 	m_bEnableProcessFilter = false;
-	m_bEnableOutputEmptyMessage = false;
+	m_bEnableOutputEmptyFilter = false;
 	m_pVecIntFilterProcessNumber = NULL;
 	m_pVecWstrFilterTags = NULL;
 
 	return 0;
 }
+
 
 int CLogFileLoader::GetMinLineNumber()
 {
@@ -271,7 +272,7 @@ int CLogFileLoader::RunFilterResult()
 
 bool CLogFileLoader::IsFilterLine(class CLineBuffer *pCLineBuffer)
 {
-	if (!m_bEnableOutputEmptyMessage && IsEmptyString(pCLineBuffer->m_wstrMessage.c_str()))
+	if (m_bEnableOutputEmptyFilter && IsEmptyString(pCLineBuffer->m_wstrMessage.c_str()))
 		return true;
 	if (m_bEnableLineNumberFilter && IsFilterLineByLineNumber(pCLineBuffer))
 		return true;
@@ -405,9 +406,15 @@ int CLogFileLoader::SetTagsFilter(vector<wstring> *pTagsFilter)
 
 bool CLogFileLoader::IsEmptyString(const wchar_t * pwszStr)
 {
-	for(unsigned int i =0;i<wcslen(pwszStr);++i)
+	const wchar_t * pwszStrAfterProcess;
+	pwszStrAfterProcess = wcschr(pwszStr, ']');
+	if (pwszStrAfterProcess!=NULL)
+		pwszStrAfterProcess++;
+	else
+		pwszStrAfterProcess = pwszStr;
+	for(unsigned int i =0;i<wcslen(pwszStrAfterProcess);++i)
 	{
-		if (isspace(pwszStr[i])==0)
+		if (isspace(pwszStrAfterProcess[i])==0)
 		{
 			return false;
 		}
@@ -429,4 +436,10 @@ bool CLogFileLoader::SaveResultAs(wstring wstrPathName)
 	}
 	fwoFile.close();
 	return true;
+}
+
+int CLogFileLoader::SetEnableFilterEmptyMessage(bool bInput)
+{
+	m_bEnableOutputEmptyFilter = bInput;
+	return 0;
 }

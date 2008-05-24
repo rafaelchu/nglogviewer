@@ -215,6 +215,7 @@ int CNGLogViewAppView::Refresh(LPCWSTR lpwzPath)
 	vec2.push_back(L"EPG");
 	vec2.push_back(L"(SQL)");
 	m_pLogFileLoader->SetTagsFilter(&vec2);
+	m_pLogFileLoader->SetEnableFilterEmptyMessage(true);
 
 	m_pLogFileLoader->RunFilterResult();
 	int nTotal = m_pLogFileLoader->GetResultSize();

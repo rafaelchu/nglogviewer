@@ -67,7 +67,7 @@ private:
 	bool m_bEnableTagsFilter;
 	bool m_bEnableKillEmptyMessage;
 	bool m_bEnableOutputNoProcessNumber;
-	bool m_bEnableOutputEmptyMessage;
+	bool m_bEnableOutputEmptyFilter;
 
 	//Includer:
 	bool m_bIncludeAllTag;
@@ -128,6 +128,9 @@ public:
 
 	// Save as function
 	bool SaveResultAs(wstring wstrPathName);
+
+	// Filter Empty Message
+	int SetEnableFilterEmptyMessage(bool bInput);
 
 	void PrintInfo();
 	void PrintResult();
