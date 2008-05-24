@@ -6,7 +6,7 @@
 
 #include "NGLogViewAppDoc.h"
 #include "NGLogViewAppView.h"
-
+#include "..\Utility\Debug.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -195,7 +195,7 @@ int CNGLogViewAppView::Refresh(LPCWSTR lpwzPath)
 		i++;
 		wchar_t *wstrA;
 		wstrA =(wchar_t *) (vecWstrIter->c_str());
-		wprintf(L"%d:%s\n", i, wstrA);
+		dprintf(L"%d:%s\n", i, wstrA);
 		
 	}
 	
@@ -206,7 +206,7 @@ int CNGLogViewAppView::Refresh(LPCWSTR lpwzPath)
 	for (veciIter = vecProcessNumber.begin(); veciIter != vecProcessNumber.end(); ++veciIter)
 	{
 		i++;
-		wprintf(L"%d:[%d]\n", i, *veciIter);
+		dprintf(L"%d:[%d]\n", i, *veciIter);
 	}
 
 	vector<wstring> vec2;
