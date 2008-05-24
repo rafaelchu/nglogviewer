@@ -194,6 +194,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\Utility\Debug.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\MainFrm.cpp"
 				>
 			</File>
@@ -237,6 +241,10 @@
 			>
 			<File
 				RelativePath="..\NGLogViewer\CLogFileLoader.h"
+				>
+			</File>
+			<File
+				RelativePath="..\Utility\Debug.h"
 				>
 			</File>
 			<File
