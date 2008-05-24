@@ -29,7 +29,7 @@ public:
 	virtual void Dump(CDumpContext& dc) const;
 #endif
 
-protected:  // control bar embedded members
+//protected:  // control bar embedded members
 	CStatusBar  m_wndStatusBar;
 
 // Generated message map functions
