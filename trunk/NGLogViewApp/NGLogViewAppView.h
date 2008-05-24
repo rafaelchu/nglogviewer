@@ -6,7 +6,11 @@
 #include "..\NGLogViewer\CLogFileLoader.h"
 typedef struct tagITEMINFO {
 	INT         nIndex;
-	CString     strData;
+	INT			nLineNumber;
+	INT			nProcessID;
+	FLOAT		fTime;
+	CString		wstrTag;
+	CString		wstrMessage;
 } ITEMINFO;
 
 class CNGLogViewAppView : public CListView
@@ -42,7 +46,7 @@ protected:
 	CLogFileLoader* m_pLogFileLoader;
 	CFont   m_ft;   
 	void FreeItemMemory();
-	BOOL AddItem(int nIndex, wchar_t* wstrBuffer);
+	BOOL AddItem(int nIndex, CLineBuffer* pCLineBuffer);
 	afx_msg void OnDestroy();
 	afx_msg void OnGetDispInfo(NMHDR* pNMHDR, LRESULT* pResult);
 	afx_msg void OnFileOpen();
