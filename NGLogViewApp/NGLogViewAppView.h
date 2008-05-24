@@ -37,6 +37,7 @@ public:
 	//int Refresh(LPCWSTR lpwzPath);
 	int Refresh(LPCWSTR lpwzPath);
 	virtual ~CNGLogViewAppView();
+	bool SetStatusBarString(const char *szInput);
 #ifdef _DEBUG
 	virtual void AssertValid() const;
 	virtual void Dump(CDumpContext& dc) const;
