@@ -4,6 +4,7 @@
 #pragma once
 
 #include "..\NGLogViewer\CLogFileLoader.h"
+#include "..\Utility\CRegSetting.h"
 #include "NGLogViewAppDoc.h"
 
 typedef struct tagITEMINFO {
@@ -52,6 +53,7 @@ public:
 
 protected:
 	CLogFileLoader* m_pLogFileLoader;
+	CRegSetting* m_pRecSetting;
 	CString m_strPath;
 	CFont   m_ft;
 	PROPINFO m_props;
