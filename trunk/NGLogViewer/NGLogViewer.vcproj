@@ -180,6 +180,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\Utility\CRegSetting.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\main.cpp"
 				>
 			</File>
@@ -195,6 +199,10 @@
 			>
 			<File
 				RelativePath=".\CLogFileLoader.h"
+				>
+			</File>
+			<File
+				RelativePath="..\Utility\CRegSetting.h"
 				>
 			</File>
 			<File

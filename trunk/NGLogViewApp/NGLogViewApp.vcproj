@@ -194,6 +194,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\Utility\CRegSetting.cpp"
+				>
+			</File>
+			<File
 				RelativePath="..\Utility\Debug.cpp"
 				>
 			</File>
@@ -249,6 +253,10 @@
 			>
 			<File
 				RelativePath="..\NGLogViewer\CLogFileLoader.h"
+				>
+			</File>
+			<File
+				RelativePath="..\Utility\CRegSetting.h"
 				>
 			</File>
 			<File
