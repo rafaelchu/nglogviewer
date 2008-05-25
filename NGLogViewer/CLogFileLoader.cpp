@@ -52,6 +52,7 @@ int CLogFileLoader::PreProcessing()
 
 CLogFileLoader::CLogFileLoader(wstring wstrFileName)
 {
+	ClearAll();
 	m_wstrFilename = wstrFileName;
 	m_wiFile.open(m_wstrFilename.c_str());
 	if (m_wiFile.bad())
