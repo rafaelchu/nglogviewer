@@ -4,6 +4,7 @@
 #pragma once
 
 #include "..\NGLogViewer\CLogFileLoader.h"
+
 typedef struct tagITEMINFO {
 	INT         nIndex;
 	INT			nLineNumber;
@@ -45,7 +46,7 @@ public:
 
 protected:
 	CLogFileLoader* m_pLogFileLoader;
-	CFont   m_ft;   
+	CFont   m_ft;
 	void FreeItemMemory();
 	BOOL AddItem(int nIndex, CLineBuffer* pCLineBuffer);
 	afx_msg void OnDestroy();
@@ -58,6 +59,7 @@ protected:
 public:
 	afx_msg void OnFileSaveAs();
 	afx_msg void OnEditFont();
+	afx_msg void OnProperties();
 };
 
 #ifndef _DEBUG  // debug version in NGLogViewAppView.cpp
