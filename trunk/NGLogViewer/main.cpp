@@ -38,19 +38,22 @@ int main (int argc, char **argv)
 		vec.push_back(1968);
 		cLogFileLoader.SetProcessFilter(&vec);
 	*/
+
 	//Test case: filter [CLRec4]
-		vector<wstring> vec2;
-		vec2.push_back(L"[CLSchMgr]");
-		vec2.push_back(L"[CLRec4]");
-		vec2.push_back(L"EPG");
-		vec2.push_back(L"(SQL)");
-		cLogFileLoader.SetTagsFilter(&vec2);
+		//vector<wstring> vec2;
+		//vec2.push_back(L"[CLSchMgr]");
+		//vec2.push_back(L"[CLRec4]");
+		//vec2.push_back(L"EPG");
+		//vec2.push_back(L"(SQL)");
+		//cLogFileLoader.SetTagsFilter(&vec2);
+
+	cLogFileLoader.SetKeyWordExcludeFilter(L"[CLSchMgr];[CLRec4];EPG");
 	
 	cTimeCheck.restart();
 	cLogFileLoader.RunFilterResult();
 	cTimeCheck.printSecs("CLogFileLoader RunFilterResult ");
 	//cLogFileLoader.PrintResult();
-	//cLogFileLoader.SaveResultAs(L"C:\\AAA.txt");
+	cLogFileLoader.SaveResultAs(L"C:\\Result.txt");
 	system("PAUSE");
 	return 0;
 }
