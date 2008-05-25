@@ -372,7 +372,7 @@ int CLogFileLoader::GetResultLine(int nLine, CLineBuffer *pCLineBuffer)
 {
 	wchar_t wszLineBuffer[LINE_BUFFER_SIZE];
 	GetResultLine(nLine,wszLineBuffer);
-	GetLineBufferData(wszLineBuffer, pCLineBuffer);
+	GetLineBufferData(wszLineBuffer, pCLineBuffer, false);
 	return 0;
 }
 
