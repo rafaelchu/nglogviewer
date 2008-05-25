@@ -7,8 +7,7 @@ CRegSetting::CRegSetting(const wchar_t *wszPath, HKEY hKeyRoot /* = HKEY_CURRENT
 		REG_OPTION_NON_VOLATILE, KEY_ALL_ACCESS, NULL, 
 		&m_hKey, &dw);
 	RegCloseKey(m_hKey);
-	ReturnValue = RegOpenKeyEx (hKeyRoot, wszPath, 0L,
-		KEY_ALL_ACCESS, &m_hKey);
+	ReturnValue = RegOpenKeyEx (hKeyRoot, wszPath, 0L, KEY_ALL_ACCESS, &m_hKey);
 
 }
 
@@ -22,7 +21,7 @@ bool CRegSetting::WriteRegKey(const wchar_t *wszName, DWORD dwInput)
 {
 	DWORD dwValue;
 	dwValue = (DWORD)dwInput;
-	LONG ReturnValue = RegSetValueEx (m_hKey, wszName, 0L, REG_DWORD,
+	LONG ReturnValue = RegSetValueExW (m_hKey, wszName, 0L, REG_DWORD,
 		(CONST BYTE*) &dwValue, sizeof(DWORD));
 
 	if(ReturnValue == ERROR_SUCCESS)
@@ -33,11 +32,39 @@ bool CRegSetting::WriteRegKey(const wchar_t *wszName, DWORD dwInput)
 
 bool CRegSetting::WriteRegKey(const wchar_t *wszName, const wchar_t *wszValue)
 {
-	LONG ReturnValue = RegSetValueEx (m_hKey, wszName, 0L, REG_SZ,
+	LONG ReturnValue = RegSetValueExW (m_hKey, wszName, 0L, REG_SZ,
 		(CONST BYTE*) wszValue, (wcslen(wszValue) + 1)*sizeof(wchar_t));
 	if(ReturnValue == ERROR_SUCCESS)
 		return true;
 	return false;
+}
+
+bool CRegSetting::WriteRegKey(const wchar_t *wszName, int nSize, const BYTE *bytedata)
+{
+	if (bytedata==NULL) return false;
+	LONG lReturn = RegSetValueExW(m_hKey, wszName, 0, REG_BINARY,
+		bytedata, nSize);
+	if(lReturn == ERROR_SUCCESS)
+		return true;
+	return false;
+}
+
+bool CRegSetting::ReadRegKey(const wchar_t *wszName, int nSize, BYTE *bytedata)
+{
+	DWORD dwType=REG_BINARY;
+	DWORD dwSize = 0;
+	LONG lReturn = RegQueryValueExW(m_hKey, wszName, NULL, &dwType, NULL, &dwSize);
+	if ( (lReturn == ERROR_SUCCESS) && (dwSize<=nSize))
+	{
+		lReturn = RegQueryValueExW(m_hKey, wszName, NULL, &dwType, bytedata, &dwSize);
+		if(lReturn == ERROR_SUCCESS)
+			return true;
+		return false;
+	}
+	else 
+	{
+		return false;
+	}
 }
 
 bool CRegSetting::ReadRegKey(const wchar_t *wszName, DWORD &dwInput)
@@ -61,7 +88,7 @@ bool CRegSetting::ReadRegKey(const wchar_t *wszName, int nSize, wchar_t *wszValu
 {
 	DWORD dwType;
 	DWORD dwSize = nSize;
-	LONG lReturn = RegQueryValueEx (m_hKey, wszName, NULL,
+	LONG lReturn = RegQueryValueExW (m_hKey, wszName, NULL,
 		&dwType, (BYTE *) wszValue, &dwSize);
 
 	if(lReturn == ERROR_SUCCESS)
