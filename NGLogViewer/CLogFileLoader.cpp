@@ -223,8 +223,10 @@ int CLogFileLoader::ClearAll()
 	m_bEnableOutputNoProcessNumber = false;
 	m_bEnableProcessFilter = false;
 	m_bEnableOutputEmptyFilter = false;
+	m_bEnableExcludeKeywordsFilter = false;
 	m_pVecIntFilterProcessNumber = NULL;
 	m_pVecWstrFilterTags = NULL;
+	m_vecWstrFilterKeyWords.clear();
 
 	return 0;
 }
@@ -282,6 +284,8 @@ bool CLogFileLoader::IsFilterLine(class CLineBuffer *pCLineBuffer)
 		return true;
 	if (m_bEnableTagsFilter && IsFilterLineByTags(pCLineBuffer))
 		return true;
+	if (m_bEnableExcludeKeywordsFilter && IsFilterLineByExcludeKeyWords(pCLineBuffer))
+		return true;
 	return false;
 }
 
@@ -298,6 +302,19 @@ bool CLogFileLoader::IsFilterLineByTags(class CLineBuffer *pCLineBuffer)
 		}
 	}
 
+	return false;
+}
+
+bool CLogFileLoader::IsFilterLineByExcludeKeyWords(class CLineBuffer *pCLineBuffer)
+{
+	vector<wstring>::iterator pos;
+	for (pos = m_vecWstrFilterKeyWords.begin();pos != m_vecWstrFilterKeyWords.end();++pos)
+	{
+		if (wcsstr(pCLineBuffer->m_wstrMessage.c_str(), pos->c_str()) != NULL)
+		{
+			return true;
+		}
+	}
 	return false;
 }
 
@@ -441,5 +458,32 @@ bool CLogFileLoader::SaveResultAs(wstring wstrPathName)
 int CLogFileLoader::SetEnableFilterEmptyMessage(bool bInput)
 {
 	m_bEnableOutputEmptyFilter = bInput;
+	return 0;
+}
+
+int CLogFileLoader::SetKeyWordExcludeFilter(const wchar_t *wstrKeyWords)
+{
+	if (wstrKeyWords == NULL)
+	{
+		m_bEnableExcludeKeywordsFilter = false;
+		m_vecWstrFilterKeyWords.clear();
+		return 0;
+	}
+
+	m_bEnableExcludeKeywordsFilter = true;
+	wchar_t *pwszBuffer = new wchar_t [wcslen(wstrKeyWords)+1];
+	
+	wcscpy(pwszBuffer, wstrKeyWords);
+
+	wchar_t wszDelims[] = L";";
+	wchar_t *result = NULL;
+	result = wcstok(pwszBuffer, wszDelims );
+	while (result != NULL)
+	{
+		m_vecWstrFilterKeyWords.push_back(result);
+		result = wcstok(NULL, wszDelims);
+	}
+	delete [] pwszBuffer;
+	pwszBuffer = NULL;
 	return 0;
 }
