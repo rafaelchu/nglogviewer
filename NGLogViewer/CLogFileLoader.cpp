@@ -269,6 +269,7 @@ int CLogFileLoader::RunFilterResult()
 		nIndex++;
 		llpos = m_wiFile.tellg();
 	}
+	delete pCLineBuffer;
 	m_wiFile.clear();
 	return 0;
 }
