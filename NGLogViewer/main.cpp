@@ -47,7 +47,11 @@ int main (int argc, char **argv)
 		//vec2.push_back(L"(SQL)");
 		//cLogFileLoader.SetTagsFilter(&vec2);
 
-	cLogFileLoader.SetKeyWordExcludeFilter(L"[CLSchMgr];[CLRec4];EPG");
+	//Test case: Exclude
+	//cLogFileLoader.SetKeyWordExcludeFilter(L"[CLSchMgr];[CLRec4];EPG");
+
+	//Test case: Include
+	cLogFileLoader.SetKeyWordIncludeFilter(L"[CLRec4];EPG");
 	
 	cTimeCheck.restart();
 	cLogFileLoader.RunFilterResult();

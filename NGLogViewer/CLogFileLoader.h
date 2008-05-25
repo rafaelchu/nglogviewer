@@ -55,6 +55,7 @@ private:
 	//Filter Setting:
 	vector<wstring> * m_pVecWstrFilterTags;
 	vector<wstring>   m_vecWstrFilterKeyWords;
+	vector<wstring>   m_vecWstrIncludeKerWords;
 	vector<int> * m_pVecIntFilterProcessNumber;
 
 
@@ -72,6 +73,7 @@ private:
 	bool m_bEnableOutputNoProcessNumber;
 	bool m_bEnableOutputEmptyFilter;
 	bool m_bEnableExcludeKeywordsFilter;
+	bool m_bEnableIncludeKeeywordsFilter;
 
 	//Includer:
 	bool m_bIncludeAllTag;
@@ -91,6 +93,7 @@ private:
 	bool IsFilterLineByProcess(class CLineBuffer *pCLineBuffer);
 	bool IsFilterLineByTags(class CLineBuffer *pCLineBuffer);
 	bool IsFilterLineByExcludeKeyWords(class CLineBuffer *pCLineBuffer);
+	bool IsFilterLineByIncludeKeyWords(class CLineBuffer *pCLineBuffer);
 
 	bool IsEmptyString(const wchar_t * pwszStr);
 	
