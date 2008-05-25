@@ -3,8 +3,8 @@
 
 #include "stdafx.h"
 #include "NGLogViewApp.h"
+#include "NGLogViewAppView.h"
 #include "NGPropertySheet.h"
-#include "../Utility/Debug.h"
 
 // CNGProperties
 
@@ -34,6 +34,14 @@ END_MESSAGE_MAP()
 // CNGProperties message handlers
 void CNGPropertySheet::OnApply ()
 {
-	
-	
+	GetActivePage ()->UpdateData (TRUE);
+
+	PROPINFO props;
+	props.bEnableEmptyString = m_FilterPage.m_bEnableEmptyString;
+	wcscpy(props.wszExcludeList, m_FilterPage.m_wszExcludeList);
+	wcscpy(props.wszIncludeList, m_FilterPage.m_wszIncludeList);
+
+	GetParent ()->SendMessage (WM_USER_APPLY, 0, (LPARAM) &props);
+
+	m_FilterPage.SetModified (FALSE);
 }
