@@ -93,6 +93,7 @@ BEGIN
         MENUITEM "&Copy\tCtrl+C",               ID_EDIT_COPY
         MENUITEM "&Paste\tCtrl+V",              ID_EDIT_PASTE
         MENUITEM "Font...",                     ID_EDIT_FONT
+        MENUITEM "Properties...",               ID_EDIT_PROPERTIES
     END
     POPUP "&View"
     BEGIN
@@ -329,6 +330,55 @@ BEGIN
 END
 
 #endif    // Chinese (Taiwan) resources
+/////////////////////////////////////////////////////////////////////////////
+
+
+/////////////////////////////////////////////////////////////////////////////
+// English (U.S.) resources
+
+#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_ENU)
+#ifdef _WIN32
+LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
+#pragma code_page(1252)
+#endif //_WIN32
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Dialog
+//
+
+IDD_PROPPAGE_FILTER DIALOGEX 0, 0, 210, 154
+STYLE DS_SETFONT | DS_FIXEDSYS | WS_CHILD | WS_DISABLED | WS_CAPTION
+CAPTION "Filter"
+FONT 8, "MS Shell Dlg", 0, 0, 0x0
+BEGIN
+    EDITTEXT        IDC_EDIT_INCLUDE,51,28,134,14,ES_AUTOHSCROLL
+    EDITTEXT        IDC_EDIT_EXCLUDE,51,60,134,14,ES_AUTOHSCROLL
+    LTEXT           "Include:",IDC_STATIC,19,32,26,8
+    LTEXT           "Exclude:",IDC_STATIC,19,66,28,8
+    CONTROL         "Enable Empty String",IDC_CHECK_EMPTY_STRING,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,19,105,80,10
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// DESIGNINFO
+//
+
+#ifdef APSTUDIO_INVOKED
+GUIDELINES DESIGNINFO 
+BEGIN
+    IDD_PROPPAGE_FILTER, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 203
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 147
+    END
+END
+#endif    // APSTUDIO_INVOKED
+
+#endif    // English (U.S.) resources
 /////////////////////////////////////////////////////////////////////////////
 
 

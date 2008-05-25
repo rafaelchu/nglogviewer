@@ -198,6 +198,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\FilterPage.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\MainFrm.cpp"
 				>
 			</File>
@@ -211,6 +215,10 @@
 			</File>
 			<File
 				RelativePath=".\NGLogViewAppView.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\NGPropertySheet.cpp"
 				>
 			</File>
 			<File
@@ -248,6 +256,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\FilterPage.h"
+				>
+			</File>
+			<File
 				RelativePath=".\MainFrm.h"
 				>
 			</File>
@@ -261,6 +273,10 @@
 			</File>
 			<File
 				RelativePath=".\NGLogViewAppView.h"
+				>
+			</File>
+			<File
+				RelativePath=".\NGPropertySheet.h"
 				>
 			</File>
 			<File
