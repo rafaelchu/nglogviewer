@@ -52,6 +52,7 @@
 #endif // _AFX_NO_AFXCMN_SUPPORT
 #include <afxdlgs.h>
 
+#include "../Utility/Debug.h"
 
 #define WM_USER_APPLY WM_USER+0x100
 

@@ -12,9 +12,9 @@ public:
 	CNGPropertySheet(UINT nIDCaption, CWnd* pParentWnd = NULL, UINT iSelectPage = 0);
 	CNGPropertySheet(LPCTSTR pszCaption, CWnd* pParentWnd = NULL, UINT iSelectPage = 0);
 	virtual ~CNGPropertySheet();
+	CFilterPage m_FilterPage;
 
 protected:
-	CFilterPage m_FilterPage;
 	afx_msg void OnApply ();
 	DECLARE_MESSAGE_MAP()
 };

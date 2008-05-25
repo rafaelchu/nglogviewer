@@ -4,6 +4,7 @@
 #pragma once
 
 #include "..\NGLogViewer\CLogFileLoader.h"
+#include "NGLogViewAppDoc.h"
 
 typedef struct tagITEMINFO {
 	INT         nIndex;
@@ -13,6 +14,12 @@ typedef struct tagITEMINFO {
 	CString		wstrTag;
 	CString		wstrMessage;
 } ITEMINFO;
+
+typedef struct tagPROPINFO {
+	wchar_t wszExcludeList[_MAX_PATH];
+	wchar_t wszIncludeList[_MAX_PATH];
+	bool    bEnableEmptyString;
+} PROPINFO;
 
 class CNGLogViewAppView : public CListView
 {
@@ -35,8 +42,7 @@ protected:
 
 // Implementation
 public:
-	//int Refresh(LPCWSTR lpwzPath);
-	int Refresh(LPCWSTR lpwzPath);
+	int Refresh();
 	virtual ~CNGLogViewAppView();
 	bool SetStatusBarString(const char *szInput);
 #ifdef _DEBUG
@@ -46,9 +52,12 @@ public:
 
 protected:
 	CLogFileLoader* m_pLogFileLoader;
+	CString m_strPath;
 	CFont   m_ft;
+	PROPINFO m_props;
 	void FreeItemMemory();
 	BOOL AddItem(int nIndex, CLineBuffer* pCLineBuffer);
+	void SetProperties(PROPINFO* props);
 	afx_msg void OnDestroy();
 	afx_msg void OnGetDispInfo(NMHDR* pNMHDR, LRESULT* pResult);
 	afx_msg void OnFileOpen();
