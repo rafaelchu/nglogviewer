@@ -57,12 +57,12 @@ protected:
 	CString m_strPath;
 	CFont   m_ft;
 	PROPINFO m_props;
-	void FreeItemMemory();
 	BOOL AddItem(int nIndex, CLineBuffer* pCLineBuffer);
 	void SetProperties(PROPINFO* props);
 	afx_msg void OnDestroy();
 	afx_msg void OnGetDispInfo(NMHDR* pNMHDR, LRESULT* pResult);
 	afx_msg void OnFileOpen();
+	afx_msg void OnDeleteitem(NMHDR* pNMHDR, LRESULT* pResult);
 
 // Generated message map functions
 protected:
