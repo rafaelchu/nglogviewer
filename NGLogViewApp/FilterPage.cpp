@@ -40,6 +40,9 @@ void CFilterPage::OnChange()
 	GetDlgItemText(IDC_EDIT_INCLUDE, str1);
 	GetDlgItemText(IDC_EDIT_EXCLUDE, str2);
 	
+	ZeroMemory(m_wszIncludeList, sizeof(wchar_t)*_MAX_PATH);
+	ZeroMemory(m_wszExcludeList, sizeof(wchar_t)*_MAX_PATH);
+
 	wsprintf(m_wszIncludeList, TEXT("%s"), str1);
 	wsprintf(m_wszExcludeList, TEXT("%s"), str2);
 	
