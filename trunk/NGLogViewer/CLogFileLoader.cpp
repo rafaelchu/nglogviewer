@@ -251,6 +251,7 @@ int CLogFileLoader::GetResultSize()
 int CLogFileLoader::RunFilterResult()
 {
 	m_setResultLine.clear();
+	m_vecResultLinePos.clear();
 	m_wiFile.seekg(0);
 
 	wchar_t wszLineBuffer[LINE_BUFFER_SIZE];
