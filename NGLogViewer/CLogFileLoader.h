@@ -27,7 +27,8 @@ class CLineBuffer
 public:
 	int m_nLineNumber;
 	int m_nProcess;
-	float m_Time;
+	float m_fTime;
+	time_t m_tTime;
 	wstring m_wstrTag;
 	wstring m_wstrMessage;
 };

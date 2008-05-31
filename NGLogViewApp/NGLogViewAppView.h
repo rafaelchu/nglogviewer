@@ -12,6 +12,7 @@ typedef struct tagITEMINFO {
 	INT			nLineNumber;
 	INT			nProcessID;
 	FLOAT		fTime;
+	time_t		tTime;
 	CString		wstrTag;
 	CString		wstrMessage;
 } ITEMINFO;
