@@ -1,5 +1,5 @@
 #include "CLogFileLoader.h"
-
+#include <time.h>
 
 using namespace std;
 
@@ -25,15 +25,15 @@ int CLogFileLoader::PreProcessing()
 			{
 				m_nMaxLineNumber = pCLineBuffer->m_nLineNumber;
 				m_nMinLineNumber = pCLineBuffer->m_nLineNumber;
-				m_fMinTime = pCLineBuffer->m_Time;
-				m_fMaxTime = pCLineBuffer->m_Time;
+				m_fMinTime = pCLineBuffer->m_fTime;
+				m_fMaxTime = pCLineBuffer->m_fTime;
 			}
 			else
 			{
 				if (pCLineBuffer->m_nLineNumber> m_nMaxLineNumber)
 					m_nMaxLineNumber = pCLineBuffer->m_nLineNumber;
-				if (pCLineBuffer->m_Time> m_fMaxTime)
-					m_fMaxTime = pCLineBuffer->m_Time;
+				if (pCLineBuffer->m_fTime> m_fMaxTime)
+					m_fMaxTime = pCLineBuffer->m_fTime;
 			}
 		}
 
@@ -115,7 +115,35 @@ void CLogFileLoader::PrintInfo()
 int CLogFileLoader::GetLineBufferData(wchar_t *wszBuffer, class CLineBuffer *pCLineBuffer, bool bTag)
 {
 	wchar_t wszString[LINE_BUFFER_SIZE]={0};
-	swscanf(wszBuffer, L"%d %f [%d]", &pCLineBuffer->m_nLineNumber, &pCLineBuffer->m_Time, &pCLineBuffer->m_nProcess);
+
+	wchar_t wszDelims[]		= L"\t";
+	wchar_t wszDelims2[]	= L"\0"; 
+	wchar_t *resultLineNumber = NULL;
+	wchar_t *resultTime = NULL;
+	
+	resultLineNumber = wcstok(wszBuffer, wszDelims );
+	resultTime = wcstok(NULL, wszDelims);
+	wszBuffer = wcstok(NULL, wszDelims2);
+	if (NULL!=wcschr(resultTime, ':'))
+	{
+		struct tm temp;
+		int byte = 0;
+		memset(&temp, byte,sizeof(struct tm));
+		temp.tm_mday =1;
+		temp.tm_year = 90;
+		swscanf(resultTime, L"%d:%d:%d", &(temp.tm_hour), &(temp.tm_min), &(temp.tm_sec));
+		pCLineBuffer->m_tTime = mktime(&temp);
+		pCLineBuffer->m_fTime = 0 ;
+	}
+	else
+	{
+		swscanf(resultTime, L"%f", &pCLineBuffer->m_fTime);
+		pCLineBuffer->m_tTime =0;
+	}
+	 
+	//swscanf(wszBuffer, L"%d %f [%d]", &pCLineBuffer->m_nLineNumber, &pCLineBuffer->m_fTime, &pCLineBuffer->m_nProcess);
+	swscanf(resultLineNumber, L"%d", &pCLineBuffer->m_nLineNumber);
+	swscanf(wszBuffer, L"[%d]",&pCLineBuffer->m_nProcess);
 
 	if (bTag)
 	{
@@ -347,9 +375,9 @@ bool CLogFileLoader::IsFilterLineByLineNumber(class CLineBuffer *pCLineBuffer)
 
 bool CLogFileLoader::IsFilterLineByTime(class CLineBuffer *pCLineBuffer)
 {
-	if (pCLineBuffer->m_Time< this->m_fStartTime)
+	if (pCLineBuffer->m_fTime< this->m_fStartTime)
 		return true;
-	if (pCLineBuffer->m_Time> this->m_fEndTime)
+	if (pCLineBuffer->m_fTime> this->m_fEndTime)
 		return true;
 	return false;
 }
