@@ -2,4 +2,5 @@
 = Idea or brain storming proble,=
 
  # How to get Tag from a debug of string?
+ # Is bookmark good function? 
  
