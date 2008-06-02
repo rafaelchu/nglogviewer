@@ -1,6 +1,6 @@
 #pragma once
 
-
+#include "../Utility/CRegSetting.h"
 // CFilterPage dialog
 
 class CFilterPage : public CPropertyPage
@@ -10,7 +10,9 @@ class CFilterPage : public CPropertyPage
 public:
 	CFilterPage();
 	virtual ~CFilterPage();
-	
+	virtual BOOL OnInitDialog();
+	virtual BOOL OnApply();
+
 // Dialog Data
 	enum { IDD = IDD_PROPPAGE_FILTER };
 	bool    m_bEnableEmptyString;
@@ -18,7 +20,8 @@ public:
 	wchar_t m_wszIncludeList[_MAX_PATH];
 
 protected:
+	CRegSetting* m_pRegSetting;
+
 	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV support
-	afx_msg void OnChange();
 	DECLARE_MESSAGE_MAP()
 };
