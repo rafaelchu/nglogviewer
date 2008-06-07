@@ -6,6 +6,7 @@
 #include "..\NGLogViewer\CLogFileLoader.h"
 #include "..\Utility\CRegSetting.h"
 #include "NGLogViewAppDoc.h"
+#include "CNGListViewEx.h"
 
 typedef struct tagITEMINFO {
 	INT         nIndex;
@@ -23,7 +24,7 @@ typedef struct tagPROPINFO {
 	bool    bEnableEmptyString;
 } PROPINFO;
 
-class CNGLogViewAppView : public CListView
+class CNGLogViewAppView : public CNGListViewEx
 {
 protected: // create from serialization only
 	CNGLogViewAppView();
@@ -34,7 +35,6 @@ public:
 	CNGLogViewAppDoc* GetDocument() const;
 
 // Operations
-public:
 
 // Overrides
 public:
@@ -66,7 +66,6 @@ protected:
 	afx_msg void OnDeleteitem(NMHDR* pNMHDR, LRESULT* pResult);
 
 // Generated message map functions
-protected:
 	DECLARE_MESSAGE_MAP()
 public:
 	afx_msg void OnFileSaveAs();
