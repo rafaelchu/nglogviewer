@@ -22,6 +22,14 @@ using namespace __gnu_cxx;
 
 #define LINE_BUFFER_SIZE	2048
 
+class CLogFileLoaderCallback
+{
+public:
+	CLogFileLoaderCallback(){};
+	virtual ~CLogFileLoaderCallback(){};
+	virtual bool OnPercentCallback(float fPos) {return true;};
+};
+
 class CLineBuffer 
 {
 public:
@@ -42,7 +50,7 @@ private:
 
 	hash_set<wstring> m_setWstrTags;
 	set<int> m_setIntProcessNumber;
-	set<int> m_setResultLine;
+set<int> m_setResultLine;
 	vector<int>  m_vecResultLinePos;
 	
 	//Data after preprocessing
@@ -97,7 +105,8 @@ private:
 	bool IsFilterLineByIncludeKeyWords(class CLineBuffer *pCLineBuffer);
 
 	bool IsEmptyString(const wchar_t * pwszStr);
-	
+
+	CLogFileLoaderCallback *m_CallbackObject;
 public:
 	CLogFileLoader(wstring wstrFileName);
 	~CLogFileLoader();
@@ -143,6 +152,8 @@ public:
 
 	void PrintInfo();
 	void PrintResult();
+
+	void SetCallbackPercentFunction(CLogFileLoaderCallback *pObj);
 };
 
 #endif
