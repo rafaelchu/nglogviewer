@@ -1,9 +1,9 @@
 #summary To do list
 = Idea or brain storming proble,=
 
- # How to get Tag from a debug of string?
- # Is bookmark good function? 
- # Select columns!?
-     * Could we select columns to display
- # Callback function from Clogview when loading or run filter result.
+ * How to get Tag from a debug of string?
+ * Is bookmark good function? 
+ * Select columns!?
+    * Could we select columns to display
+ * Callback function from Clogview when loading or run filter result.
  
