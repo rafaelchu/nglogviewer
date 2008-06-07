@@ -24,7 +24,7 @@ typedef struct tagPROPINFO {
 	bool    bEnableEmptyString;
 } PROPINFO;
 
-class CNGLogViewAppView : public CNGListViewEx
+class CNGLogViewAppView : public CNGListViewEx, public CLogFileLoaderCallback
 {
 protected: // create from serialization only
 	CNGLogViewAppView();
@@ -33,7 +33,7 @@ protected: // create from serialization only
 // Attributes
 public:
 	CNGLogViewAppDoc* GetDocument() const;
-
+	bool OnPercentCallback(float fInput);
 // Operations
 
 // Overrides
@@ -59,6 +59,7 @@ protected:
 	CFont   m_ft;
 	PROPINFO m_props;
 	BOOL AddItem(int nIndex, CLineBuffer* pCLineBuffer);
+	bool OnAddListPercentCallback(float fInput);
 	void SetProperties(PROPINFO* props);
 	afx_msg void OnDestroy();
 	afx_msg void OnGetDispInfo(NMHDR* pNMHDR, LRESULT* pResult);

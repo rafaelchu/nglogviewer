@@ -59,6 +59,7 @@ CLogFileLoader::CLogFileLoader(wstring wstrFileName)
 	{
 		printf("fail to load!");
 	}
+	m_CallbackObject = NULL;
 }
 
 wstring CLogFileLoader::GetTag(wchar_t *wszBuffer)
@@ -256,7 +257,7 @@ int CLogFileLoader::ClearAll()
 	m_pVecIntFilterProcessNumber = NULL;
 	m_pVecWstrFilterTags = NULL;
 	m_vecWstrFilterKeyWords.clear();
-
+	
 	return 0;
 }
 
@@ -286,6 +287,10 @@ int CLogFileLoader::RunFilterResult()
 	class CLineBuffer *pCLineBuffer = new CLineBuffer();
 	int nIndex = 0;
 
+	m_wiFile.seekg (0, ios::end);
+	int nlength = m_wiFile.tellg();
+	m_wiFile.seekg (0, ios::beg);
+
 	int llpos = m_wiFile.tellg();
 	while(m_wiFile.getline(wszLineBuffer, LINE_BUFFER_SIZE))
 	{
@@ -297,9 +302,18 @@ int CLogFileLoader::RunFilterResult()
 		}
 		nIndex++;
 		llpos = m_wiFile.tellg();
+		if (m_CallbackObject)
+		{
+			float fInput = ((float)llpos/nlength); 
+			m_CallbackObject->OnPercentCallback(fInput);
+		}
 	}
+
 	delete pCLineBuffer;
 	m_wiFile.clear();
+
+	if (m_CallbackObject)
+		m_CallbackObject->OnPercentCallback(1.0f);
 	return 0;
 }
 
@@ -562,4 +576,9 @@ int CLogFileLoader::SetKeyWordIncludeFilter(const wchar_t *wstrKeyWords)
 	delete [] pwszBuffer;
 	pwszBuffer = NULL;
 	return 0;
+}
+
+void CLogFileLoader::SetCallbackPercentFunction(CLogFileLoaderCallback *pObj)
+{
+	m_CallbackObject = pObj;
 }
