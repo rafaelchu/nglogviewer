@@ -67,6 +67,8 @@ set<int> m_setResultLine;
 	vector<wstring>   m_vecWstrIncludeKerWords;
 	vector<int> * m_pVecIntFilterProcessNumber;
 
+	vector<class CLineBuffer*> m_vecpRunBuffer;
+
 
 	int m_nStartLineNumber;
 	int m_nEndLineNumber;
@@ -120,7 +122,7 @@ public:
 	int GetResultSize();
 	int GetResultLine(int nLine, CLineBuffer *pCLineBuffer);
 	int GetResultLine(int nLine, wchar_t *wszLineBuffer);
-
+	int GetResultLine(int nLine, CLineBuffer **pCLineBuffer);
 	// Tags Filter
 	int SetTagsFilter(vector<wstring> *pTagsFilter);
 

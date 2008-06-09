@@ -10,12 +10,7 @@
 
 typedef struct tagITEMINFO {
 	INT         nIndex;
-	INT			nLineNumber;
-	INT			nProcessID;
-	FLOAT		fTime;
-	time_t		tTime;
-	CString		wstrTag;
-	CString		wstrMessage;
+	CLineBuffer *m_cLineBuffer;
 } ITEMINFO;
 
 typedef struct tagPROPINFO {
@@ -58,7 +53,7 @@ protected:
 	CString m_strPath;
 	CFont   m_ft;
 	PROPINFO m_props;
-	BOOL AddItem(int nIndex, CLineBuffer* pCLineBuffer);
+	BOOL AddItem(int nIndex);
 	bool OnAddListPercentCallback(float fInput);
 	void SetProperties(PROPINFO* props);
 	afx_msg void OnDestroy();
