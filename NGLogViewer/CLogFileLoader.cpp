@@ -77,6 +77,7 @@ wstring CLogFileLoader::GetTag(wchar_t *wszBuffer)
 
 CLogFileLoader::~CLogFileLoader()
 {
+	ClearAll();
 }
 
 void CLogFileLoader::PrintInfo()
@@ -258,6 +259,13 @@ int CLogFileLoader::ClearAll()
 	m_pVecWstrFilterTags = NULL;
 	m_vecWstrFilterKeyWords.clear();
 	
+	for (int i = 0;i<m_vecpRunBuffer.size();++i)
+	{
+		delete m_vecpRunBuffer[i];
+		m_vecpRunBuffer[i]=NULL;
+	}
+	m_vecpRunBuffer.clear();
+	
 	return 0;
 }
 
@@ -282,9 +290,15 @@ int CLogFileLoader::RunFilterResult()
 	m_setResultLine.clear();
 	m_vecResultLinePos.clear();
 	m_wiFile.seekg(0);
+	
+	for (int i = 0;i<m_vecpRunBuffer.size();++i)
+	{
+		delete m_vecpRunBuffer[i];
+		m_vecpRunBuffer[i]=NULL;
+	}
+	m_vecpRunBuffer.clear();
 
 	wchar_t wszLineBuffer[LINE_BUFFER_SIZE];
-	class CLineBuffer *pCLineBuffer = new CLineBuffer();
 	int nIndex = 0;
 
 	m_wiFile.seekg (0, ios::end);
@@ -294,12 +308,19 @@ int CLogFileLoader::RunFilterResult()
 	int llpos = m_wiFile.tellg();
 	while(m_wiFile.getline(wszLineBuffer, LINE_BUFFER_SIZE))
 	{
+		class CLineBuffer *pCLineBuffer = new CLineBuffer();
 		GetLineBufferData(wszLineBuffer, pCLineBuffer, false);
 		if (! IsFilterLine(pCLineBuffer))
 		{
 			m_setResultLine.insert(nIndex);
 			m_vecResultLinePos.push_back(llpos);
+			m_vecpRunBuffer.push_back(pCLineBuffer);
 		}
+		else
+		{
+			delete pCLineBuffer;
+		}
+
 		nIndex++;
 		llpos = m_wiFile.tellg();
 		if (m_CallbackObject)
@@ -309,7 +330,6 @@ int CLogFileLoader::RunFilterResult()
 		}
 	}
 
-	delete pCLineBuffer;
 	m_wiFile.clear();
 
 	if (m_CallbackObject)
@@ -581,4 +601,15 @@ int CLogFileLoader::SetKeyWordIncludeFilter(const wchar_t *wstrKeyWords)
 void CLogFileLoader::SetCallbackPercentFunction(CLogFileLoaderCallback *pObj)
 {
 	m_CallbackObject = pObj;
+}
+
+int CLogFileLoader::GetResultLine(int nLine, CLineBuffer **pCLineBuffer)
+{
+	if (nLine<m_vecResultLinePos.size())
+	{
+		*pCLineBuffer = (CLineBuffer *)m_vecpRunBuffer[nLine];
+		return 0;
+	}
+	*pCLineBuffer=NULL;
+	return -1;
 }
