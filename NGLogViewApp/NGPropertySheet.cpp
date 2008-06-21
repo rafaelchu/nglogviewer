@@ -35,13 +35,8 @@ END_MESSAGE_MAP()
 void CNGPropertySheet::OnApply ()
 {
 	GetActivePage ()->UpdateData (TRUE);
-
 	PROPINFO props;
-	props.bEnableEmptyString = m_FilterPage.m_bEnableEmptyString;
-	wcscpy(props.wszExcludeList, m_FilterPage.m_wszExcludeList);
-	wcscpy(props.wszIncludeList, m_FilterPage.m_wszIncludeList);
-
+	props=m_FilterPage.m_PropInfo;
 	GetParent ()->SendMessage (WM_USER_APPLY, 0, (LPARAM) &props);
-
 	m_FilterPage.SetModified (FALSE);
 }

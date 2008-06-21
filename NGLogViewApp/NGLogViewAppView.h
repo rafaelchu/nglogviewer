@@ -7,17 +7,12 @@
 #include "..\Utility\CRegSetting.h"
 #include "NGLogViewAppDoc.h"
 #include "CNGListViewEx.h"
+#include "FilterPage.h"
 
 typedef struct tagITEMINFO {
 	INT         nIndex;
 	CLineBuffer *m_cLineBuffer;
 } ITEMINFO;
-
-typedef struct tagPROPINFO {
-	wchar_t wszExcludeList[_MAX_PATH];
-	wchar_t wszIncludeList[_MAX_PATH];
-	bool    bEnableEmptyString;
-} PROPINFO;
 
 class CNGLogViewAppView : public CNGListViewEx, public CLogFileLoaderCallback
 {

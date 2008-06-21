@@ -9,10 +9,12 @@ class CRegSetting
 	~CRegSetting();	
 
 	bool WriteRegKey(const wchar_t *wszName, DWORD dwInput);
+	bool WriteRegKey(const wchar_t *wszName, bool bInput);
 	bool WriteRegKey(const wchar_t *wszName, const wchar_t *wszValue);
 	bool WriteRegKey(const wchar_t *wszName, int nSize, const BYTE *bytedata);
 
 	bool ReadRegKey(const wchar_t *wszName, DWORD &dwInput);
+	bool ReadRegKey(const wchar_t *wszName, bool &bInput);
 	bool ReadRegKey(const wchar_t *wszName, int nSize, wchar_t *wszValue);
 	bool ReadRegKey(const wchar_t *wszName, int nSize, BYTE *bytedata);
 

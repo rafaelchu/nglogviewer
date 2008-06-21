@@ -10,6 +10,7 @@
 #define IDC_EDIT_INCLUDE                1000
 #define IDC_EDIT_EXCLUDE                1001
 #define IDC_CHECK_EMPTY_STRING          1002
+#define IDC_CHECK_MATCH_CASE            1003
 #define ID_EDIT_FONT                    32771
 #define ID_EDIT_PROPERTIES              32772
 
@@ -19,7 +20,7 @@
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NEXT_RESOURCE_VALUE        130
 #define _APS_NEXT_COMMAND_VALUE         32773
-#define _APS_NEXT_CONTROL_VALUE         1003
+#define _APS_NEXT_CONTROL_VALUE         1004
 #define _APS_NEXT_SYMED_VALUE           101
 #endif
 #endif

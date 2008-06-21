@@ -50,7 +50,7 @@ private:
 
 	hash_set<wstring> m_setWstrTags;
 	set<int> m_setIntProcessNumber;
-set<int> m_setResultLine;
+	set<int> m_setResultLine;
 	vector<int>  m_vecResultLinePos;
 	
 	//Data after preprocessing
@@ -90,6 +90,9 @@ set<int> m_setResultLine;
 	bool m_bIncludeAllTag;
 	bool m_bInculdeAllProcessNumber;
 
+	//string compare flag
+	bool m_bEnableMatchCaseStringCompare;
+
 	wstring GetTag(wchar_t *wszBuffer);
 	void CleanAsTag(wchar_t *wszString);
 	int GetProcessNumber(wchar_t *wszBuffer);
@@ -109,6 +112,10 @@ set<int> m_setResultLine;
 	bool IsEmptyString(const wchar_t * pwszStr);
 
 	CLogFileLoaderCallback *m_CallbackObject;
+	
+	int CompareString(const wchar_t *s1, const wchar_t *s2);
+	const wchar_t * CheckSubString(const wchar_t *s1, const wchar_t *s2);
+	
 public:
 	CLogFileLoader(wstring wstrFileName);
 	~CLogFileLoader();
@@ -156,6 +163,9 @@ public:
 	void PrintResult();
 
 	void SetCallbackPercentFunction(CLogFileLoaderCallback *pObj);
+	
+	// Set string compare function for match case or ignore case
+	void SetEnableMatchCaseStringCompare(bool bInput);
 };
 
 #endif

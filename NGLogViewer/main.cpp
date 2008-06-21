@@ -66,7 +66,7 @@ int TestCRegSetting()
 {
 	class CRegSetting cRegSetting(L"SOFTWARE\\NG1\\BBB");
 	DWORD a=0;
-	cRegSetting.WriteRegKey(L"SettingA", 5);
+	cRegSetting.WriteRegKey(L"SettingA", (DWORD)5);
 	cRegSetting.ReadRegKey(L"SettingA", a);
 	wchar_t wstr[128] = {0};
 	cRegSetting.WriteRegKey(L"SettingString", L"abcd");
