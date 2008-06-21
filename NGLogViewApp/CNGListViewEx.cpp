@@ -45,6 +45,7 @@ CNGListViewEx::CNGListViewEx()
 	m_bClientWidthSel = TRUE;
 
 	m_cxClient = 0;
+	m_nSelectItem = -1;
 	//m_cxStateImageOffset = 0;
 
 	m_clrText = ::GetSysColor(COLOR_WINDOWTEXT);
@@ -149,6 +150,7 @@ void CNGListViewEx::DrawItem(LPDRAWITEMSTRUCT lpDrawItemStruct)
 
 		CBrush cbr(::GetSysColor(COLOR_HIGHLIGHT));
 		pDC->FillRect(rcAllLabels, &cbr);
+		m_nSelectItem = nItem;
 	}
 	else
 	{
@@ -161,7 +163,7 @@ void CNGListViewEx::DrawItem(LPDRAWITEMSTRUCT lpDrawItemStruct)
 	ListCtrl.GetItemRect(nItem, rcItem, LVIR_LABEL);
 	pszText = MakeShortString(pDC, szBuff,
 				rcItem.right-rcItem.left, 2*OFFSET_FIRST);
-
+	
 	rcLabel = rcItem;
 	rcLabel.left += OFFSET_FIRST;
 	rcLabel.right -= OFFSET_FIRST;
