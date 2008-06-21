@@ -23,13 +23,14 @@ public:
 // Attributes
 protected:
 	BOOL m_bFullRowSel;
+	int  m_nSelectItem;
 
 public:
 	BOOL SetFullRowSel(BOOL bFillRowSel);
 	BOOL GetFullRowSel();
-
+	int  GetSelectItem(){return m_nSelectItem;};
 	BOOL m_bClientWidthSel;
-
+	
 // Overrides
 protected:
 	virtual void DrawItem(LPDRAWITEMSTRUCT lpDrawItemStruct);

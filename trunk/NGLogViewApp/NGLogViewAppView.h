@@ -14,6 +14,21 @@ typedef struct tagITEMINFO {
 	CLineBuffer *m_cLineBuffer;
 } ITEMINFO;
 
+typedef struct tagFINDINFO{
+	CString strFind;
+	bool bMatchCase;
+	bool bMatchWholeWord;
+	bool bSearchDown;
+
+	tagFINDINFO()
+	{
+		strFind = _T("");
+		bMatchCase = false;
+		bMatchWholeWord = false;
+		bSearchDown = true;
+	}
+} FINDINFO;
+
 class CNGLogViewAppView : public CNGListViewEx, public CLogFileLoaderCallback
 {
 protected: // create from serialization only
@@ -48,13 +63,22 @@ protected:
 	CString m_strPath;
 	CFont   m_ft;
 	PROPINFO m_props;
-	BOOL AddItem(int nIndex);
+	FINDINFO m_fdinfo;
+	bool m_bRemoveShowSelAlwaysAtFindDialogExit;
+	CFindReplaceDialog* m_pFindDialog;
+
+	bool AddItem(int nIndex);
 	bool OnAddListPercentCallback(float fInput);
 	void SetProperties(PROPINFO* props);
+	bool FindWhatYouNeed(CString strFind, bool bMatchCase, bool bMatchWholeWord, bool bSearchDown);
+	void OnFindDialog();
+	bool OnFindString();
 	afx_msg void OnDestroy();
 	afx_msg void OnGetDispInfo(NMHDR* pNMHDR, LRESULT* pResult);
 	afx_msg void OnFileOpen();
-	afx_msg void OnDeleteitem(NMHDR* pNMHDR, LRESULT* pResult);
+	afx_msg void OnDeleteItem(NMHDR* pNMHDR, LRESULT* pResult);
+	afx_msg LRESULT OnHotKey(WPARAM wParam, LPARAM lParam);
+	afx_msg LRESULT OnFindDialogMessage(WPARAM wParam, LPARAM lParam);
 
 // Generated message map functions
 	DECLARE_MESSAGE_MAP()
