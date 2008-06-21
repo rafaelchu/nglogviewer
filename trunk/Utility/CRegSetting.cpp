@@ -99,3 +99,38 @@ bool CRegSetting::ReadRegKey(const wchar_t *wszName, int nSize, wchar_t *wszValu
 	return false;
 }
 
+bool CRegSetting::ReadRegKey(const wchar_t *wszName, bool &bInput)
+{
+	DWORD dwType;
+	DWORD dwSize = sizeof (DWORD);
+	DWORD dwDest;
+
+	LONG lReturn = RegQueryValueExW (m_hKey, wszName, NULL,
+		&dwType, (BYTE *) &dwDest, &dwSize);
+
+	if(lReturn == ERROR_SUCCESS)
+	{
+		if (dwDest >0)
+			bInput = true;
+		else
+			bInput = false;
+		return true;
+	}
+	return false;
+}
+
+bool CRegSetting::WriteRegKey(const wchar_t *wszName, bool bInput)
+{
+	DWORD dwValue;
+	if (bInput)
+		dwValue = (DWORD)1;
+	else
+		dwValue = (DWORD)0;
+	LONG ReturnValue = RegSetValueExW (m_hKey, wszName, 0L, REG_DWORD,
+		(CONST BYTE*) &dwValue, sizeof(DWORD));
+
+	if(ReturnValue == ERROR_SUCCESS)
+		return true;
+
+	return false;
+}

@@ -571,8 +571,8 @@ int CLogFileLoader::SetKeyWordExcludeFilter(const wchar_t *wstrKeyWords)
 int CLogFileLoader::SetKeyWordIncludeFilter(const wchar_t *wstrKeyWords)
 {
 	if (wstrKeyWords == NULL || 
-		(wcscmp(wstrKeyWords, L"*")==0) ||
-		(wcscmp(wstrKeyWords, L"") ==0)
+		(CompareString(wstrKeyWords, L"*")==0) ||
+		(CompareString(wstrKeyWords, L"") ==0)
 		)
 	{
 		m_bEnableIncludeKeeywordsFilter = false;
@@ -612,4 +612,26 @@ int CLogFileLoader::GetResultLine(int nLine, CLineBuffer **pCLineBuffer)
 	}
 	*pCLineBuffer=NULL;
 	return -1;
+}
+
+void CLogFileLoader::SetEnableMatchCaseStringCompare(bool bInput)
+{
+	m_bEnableMatchCaseStringCompare = bInput;
+}
+
+int CLogFileLoader::CompareString(const wchar_t *s1, const wchar_t *s2)
+{
+	if (m_bEnableMatchCaseStringCompare)
+		return wcscmp(s1,s2);
+	else
+		return wcsicmp(s1,s2);
+}
+
+const wchar_t * CLogFileLoader::CheckSubString(const wchar_t *s1, const wchar_t *s2)
+{
+	if (m_bEnableMatchCaseStringCompare)
+		return wcsstr(s1,s2);
+	else
+		return wcsstr(s1,s2); //TODO: NEED To Find a function for ignore case w strstr.
+
 }
