@@ -1,16 +1,9 @@
-// ListVwEx.h : interface of the CListViewEx class
-//
-// This class provedes a full row selection mode for the report
-// mode list view control.
-//
-// This is a part of the Microsoft Foundation Classes C++ library.
-// Copyright (c) Microsoft Corporation.  All rights reserved.
-//
-// This source code is only intended as a supplement to the
-// Microsoft Foundation Classes Reference and related
-// electronic documentation provided with the library.
-// See these sources for detailed information regarding the
-// Microsoft Foundation Classes product.
+// CNGListViewEx.h : interface of the CNGListViewEx class
+#include <set>
+using namespace std;
+
+#define NG_COLOR_BOOKMARK_TEXT		0x000000FF
+#define NG_COLOR_BOOKMARK_BK		0x0000FFFF
 
 class CNGListViewEx : public CListView
 {
@@ -30,6 +23,7 @@ public:
 	BOOL GetFullRowSel();
 	int  GetSelectItem(){return m_nSelectItem;};
 	BOOL m_bClientWidthSel;
+	bool SetBookmark(int nIndex);
 	
 // Overrides
 protected:
@@ -73,6 +67,8 @@ protected:
 	afx_msg void OnKillFocus(CWnd* pNewWnd);
 	//}}AFX_MSG
 	DECLARE_MESSAGE_MAP()
+
+	set<int> m_setBookmarkIndex;
 };
 
 /////////////////////////////////////////////////////////////////////////////
