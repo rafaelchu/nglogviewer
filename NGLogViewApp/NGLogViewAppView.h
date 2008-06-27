@@ -73,6 +73,8 @@ protected:
 	bool FindWhatYouNeed(CString strFind, bool bMatchCase, bool bMatchWholeWord, bool bSearchDown);
 	void OnFindDialog();
 	bool OnFindString();
+	void OnSetBookmark();
+	void OnFindNextBookmark();
 	afx_msg void OnDestroy();
 	afx_msg void OnGetDispInfo(NMHDR* pNMHDR, LRESULT* pResult);
 	afx_msg void OnFileOpen();

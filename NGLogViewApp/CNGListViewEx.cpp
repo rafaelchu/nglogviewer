@@ -142,15 +142,30 @@ void CNGListViewEx::DrawItem(LPDRAWITEMSTRUCT lpDrawItemStruct)
 	rcAllLabels.left = rcLabel.left;
 	if (m_bClientWidthSel && rcAllLabels.right<m_cxClient)
 		rcAllLabels.right = m_cxClient;
+	
+
+	clrTextSave = pDC->GetTextColor();
+	clrBkSave = pDC->GetBkColor();
 
 	if (bSelected)
 	{
-		clrTextSave = pDC->SetTextColor(::GetSysColor(COLOR_HIGHLIGHTTEXT));
-		clrBkSave = pDC->SetBkColor(::GetSysColor(COLOR_HIGHLIGHT));
+		//draw selected item
+		pDC->SetTextColor(::GetSysColor(COLOR_HIGHLIGHTTEXT));
+		pDC->SetBkColor(::GetSysColor(COLOR_HIGHLIGHT));
 
 		CBrush cbr(::GetSysColor(COLOR_HIGHLIGHT));
 		pDC->FillRect(rcAllLabels, &cbr);
 		m_nSelectItem = nItem;
+	}
+	else if ( m_setBookmarkIndex.end()!= m_setBookmarkIndex.find(lvi.iItem))  //bBookmarked?
+	//else if ( 0==(lvi.iItem%2))  //bBookmarked?
+	{
+		//draw book mark item
+		pDC->SetTextColor(NG_COLOR_BOOKMARK_TEXT);
+		pDC->SetBkColor(NG_COLOR_BOOKMARK_BK);
+		CBrush cbr(NG_COLOR_BOOKMARK_BK);
+		pDC->FillRect(rcAllLabels, &cbr);
+
 	}
 	else
 	{
@@ -218,13 +233,10 @@ void CNGListViewEx::DrawItem(LPDRAWITEMSTRUCT lpDrawItemStruct)
 	if (lvi.state & LVIS_FOCUSED && bFocus)
 		pDC->DrawFocusRect(rcAllLabels);
 
-// set original colors if item was selected
+// reset original colors
 
-	if (bSelected)
-	{
-		pDC->SetTextColor(clrTextSave);
-		pDC->SetBkColor(clrBkSave);
-	}
+	pDC->SetTextColor(clrTextSave);
+	pDC->SetBkColor(clrBkSave);
 }
 
 LPCTSTR CNGListViewEx::MakeShortString(CDC* pDC, LPCTSTR lpszLong, int nColumnLen, int nOffset)
@@ -392,4 +404,25 @@ void CNGListViewEx::OnKillFocus(CWnd* pNewWnd)
 	// repaint items that should change appearance
 	if(m_bFullRowSel && (GetStyle() & LVS_TYPEMASK) == LVS_REPORT)
 		RepaintSelectedItems();
+}
+
+bool CNGListViewEx::SetBookmark(int nIndex)
+{
+	if (nIndex == -1)	//special case
+	{
+		return false;
+	}
+	if (m_setBookmarkIndex.find(nIndex)!= m_setBookmarkIndex.end())
+	{
+		//nIndex exist.
+		m_setBookmarkIndex.erase(nIndex);
+		return false;
+	}
+	else
+	{
+		//nIndex does not exist.
+		m_setBookmarkIndex.insert(nIndex);
+		return true;
+	}
+
 }
