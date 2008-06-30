@@ -44,6 +44,7 @@ public:
 // Overrides
 public:
 	virtual BOOL PreCreateWindow(CREATESTRUCT& cs);
+	virtual BOOL PreTranslateMessage(MSG* pMsg);
 protected:
 	virtual void OnInitialUpdate(); // called first time after construct
 
@@ -71,15 +72,14 @@ protected:
 	bool OnAddListPercentCallback(float fInput);
 	void SetProperties(PROPINFO* props);
 	bool FindWhatYouNeed(CString strFind, bool bMatchCase, bool bMatchWholeWord, bool bSearchDown);
-	void OnFindDialog();
-	bool OnFindString();
-	void OnSetBookmark();
-	void OnFindNextBookmark();
+	afx_msg void OnFindDialog();
+	afx_msg void OnFindString();
+	afx_msg void OnSetBookmark();
+	afx_msg void OnFindNextBookmark();
 	afx_msg void OnDestroy();
 	afx_msg void OnGetDispInfo(NMHDR* pNMHDR, LRESULT* pResult);
 	afx_msg void OnFileOpen();
 	afx_msg void OnDeleteItem(NMHDR* pNMHDR, LRESULT* pResult);
-	afx_msg LRESULT OnHotKey(WPARAM wParam, LPARAM lParam);
 	afx_msg LRESULT OnFindDialogMessage(WPARAM wParam, LPARAM lParam);
 
 // Generated message map functions
