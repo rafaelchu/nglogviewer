@@ -4,7 +4,49 @@
 #include "stdafx.h"
 #include "NGLogViewApp.h"
 #include "FilterPage.h"
-
+DWORD DWLISTCOLOR[40] =
+{
+	0xFFFFFF,
+	0xFF    ,
+	0xFFFFFF,
+	0xFF0080,
+	0xFFFFFF,
+	0x4080FF,
+	0xFFFFFF,
+	0x808040,
+	0xFFFFFF,
+	0xFF8000,
+	0x0     ,
+	0xFF8080,
+	0x0     ,
+	0x80FF80,
+	0x0     ,
+	0xFFFF80,
+	0x0     ,
+	0x80FF80,
+	0x0     ,
+	0x80FFFF,
+	0xFFFFFF,
+	0xFF    ,
+	0xFFFFFF,
+	0xFF0080,
+	0xFFFFFF,
+	0x4080FF,
+	0xFFFFFF,
+	0x808040,
+	0xFFFFFF,
+	0xFF8000,
+	0x0     ,
+	0xFF8080,
+	0x0     ,
+	0x80FF80,
+	0x0     ,
+	0xFFFF80,
+	0x0     ,
+	0x80FF80,
+	0x0     ,
+	0x80FFFF,
+};
 // CFilterPage dialog
 #define APP_SETTING_PATH (L"SOFTWARE\\NG\\LOGViewer")
 
@@ -40,6 +82,15 @@ BOOL CFilterPage::OnInitDialog()
 	SetDlgItemCheck(IDC_CHECK_EMPTY_STRING, m_PropInfo.bEnableEmptyString);
 	SetDlgItemCheck(IDC_CHECK_MATCH_CASE, m_PropInfo.bEnableMatchCase);
 
+	//2. Set HighLight 20 items
+	CComboBox *pComboBox = (CComboBox *) GetDlgItem(IDC_COMBO_HIGHLIGHT);
+	for (int i =0;i<20; i++)
+	{
+		wchar_t wszString [256];
+		wsprintf(wszString, L"Filter %d", i+1);
+		pComboBox->AddString(wszString);
+	}
+	pComboBox->SetCurSel(0);
 	return TRUE;
 
 }
@@ -95,7 +146,46 @@ void CFilterPage::SetDlgItemCheck(int nID, bool bInput)
 
 
 BEGIN_MESSAGE_MAP(CFilterPage, CPropertyPage)
+	ON_CBN_SELCHANGE(IDC_COMBO_HIGHLIGHT, &CFilterPage::OnCbnSelchangeComboHighlight)
+	ON_WM_CTLCOLOR()
 END_MESSAGE_MAP()
 
 
 // CFilterPage message handlers
+
+void CFilterPage::OnCbnSelchangeComboHighlight()
+{
+	CComboBox *pEditHighlight = (CComboBox*)GetDlgItem(IDC_EDIT_HIGHLIGHT);
+	pEditHighlight->SetWindowText(L"abcde");
+}
+
+HBRUSH CFilterPage::OnCtlColor(CDC* pDC, CWnd* pWnd, UINT nCtlColor)
+{
+	if ((pWnd->GetDlgCtrlID() == IDC_EDIT_HIGHLIGHT) && (nCtlColor == CTLCOLOR_EDIT))
+	{   
+		CEdit *pEditHighlight = (CEdit*)GetDlgItem(IDC_EDIT_HIGHLIGHT);
+		COLORREF dwTextColor;
+		COLORREF dwBkColor;
+		CComboBox *pComboBox = (CComboBox *) GetDlgItem(IDC_COMBO_HIGHLIGHT);
+		int nCurrent = pComboBox->GetCurSel();
+		dwTextColor = (COLORREF)DWLISTCOLOR[nCurrent*2];
+		dwBkColor = (COLORREF)DWLISTCOLOR[nCurrent*2+1];
+		pDC->SetTextColor(dwTextColor);          
+		pDC->SetBkColor(dwBkColor);
+		m_brMine = ::CreateSolidBrush(dwBkColor);   
+		return   m_brMine;       
+	} 
+	else if ((pWnd->GetDlgCtrlID() == IDC_COMBO_HIGHLIGHT) )
+	{
+		CEdit *pEditHighlight = (CEdit*)GetDlgItem(IDC_EDIT_HIGHLIGHT);
+		pEditHighlight->SetWindowText(L"abcde");
+		HBRUSH   hbr   =   CDialog::OnCtlColor(pDC,   pWnd,   nCtlColor);   
+		return   hbr;   
+	}
+	else   
+	{   
+		HBRUSH   hbr   =   CDialog::OnCtlColor(pDC,   pWnd,   nCtlColor);   
+		return   hbr;   
+	}   
+
+}

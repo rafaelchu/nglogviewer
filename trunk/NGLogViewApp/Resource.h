@@ -12,6 +12,11 @@
 #define IDC_EDIT_EXCLUDE                1001
 #define IDC_CHECK_EMPTY_STRING          1002
 #define IDC_CHECK_MATCH_CASE            1003
+#define IDC_COMBO_HIGHLIGHT             1004
+#define IDC_EDIT_HIGHLIGHT              1005
+#define IDC_COMBOBOXEX1                 1006
+#define IDC_COMBO_HIGHLIGHT_EDIT        1009
+#define IDC_EDIT2                       1010
 #define ID_EDIT_FONT                    32771
 #define ID_EDIT_PROPERTIES              32772
 #define HOT_KEY_FIND_DLG                32773
@@ -26,7 +31,7 @@
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NEXT_RESOURCE_VALUE        131
 #define _APS_NEXT_COMMAND_VALUE         32778
-#define _APS_NEXT_CONTROL_VALUE         1004
+#define _APS_NEXT_CONTROL_VALUE         1011
 #define _APS_NEXT_SYMED_VALUE           101
 #endif
 #endif
