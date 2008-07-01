@@ -35,6 +35,7 @@ public:
 	enum { IDD = IDD_PROPPAGE_FILTER };
 
 	PROPINFO m_PropInfo;
+	HBRUSH   m_brMine;
 
 
 protected:
@@ -42,4 +43,7 @@ protected:
 
 	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV support
 	DECLARE_MESSAGE_MAP()
+public:
+	afx_msg void OnCbnSelchangeComboHighlight();
+	afx_msg HBRUSH OnCtlColor(CDC* pDC, CWnd* pWnd, UINT nCtlColor);
 };
