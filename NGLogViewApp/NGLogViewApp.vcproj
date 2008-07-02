@@ -264,6 +264,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\ColorPair.h"
+				>
+			</File>
+			<File
 				RelativePath="..\Utility\CRegSetting.h"
 				>
 			</File>

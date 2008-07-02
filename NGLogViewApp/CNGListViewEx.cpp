@@ -169,7 +169,10 @@ void CNGListViewEx::DrawItem(LPDRAWITEMSTRUCT lpDrawItemStruct)
 	}
 	else
 	{
-		CBrush cbr(m_clrTextBk);
+		ITEMINFO* pItem = (ITEMINFO*)lvi.lParam;
+		pDC->SetTextColor(pItem->colors.m_cTextColor);
+		pDC->SetBkColor(pItem->colors.m_cBkColor);
+		CBrush cbr(pItem->colors.m_cBkColor);
 		pDC->FillRect(rcAllLabels, &cbr);
 	}
 

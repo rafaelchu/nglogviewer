@@ -3,16 +3,13 @@
 
 #pragma once
 
-#include "..\NGLogViewer\CLogFileLoader.h"
+
 #include "..\Utility\CRegSetting.h"
 #include "NGLogViewAppDoc.h"
 #include "CNGListViewEx.h"
 #include "FilterPage.h"
 
-typedef struct tagITEMINFO {
-	INT         nIndex;
-	CLineBuffer *m_cLineBuffer;
-} ITEMINFO;
+
 
 typedef struct tagFINDINFO{
 	CString strFind;
@@ -67,11 +64,14 @@ protected:
 	FINDINFO m_fdinfo;
 	bool m_bRemoveShowSelAlwaysAtFindDialogExit;
 	CFindReplaceDialog* m_pFindDialog;
-
+	
+	map<std::wstring,  COLORPAIR> m_mapHighLightString;
+	
 	bool AddItem(int nIndex);
 	bool OnAddListPercentCallback(float fInput);
 	void SetProperties(PROPINFO* props);
 	bool FindWhatYouNeed(CString strFind, bool bMatchCase, bool bMatchWholeWord, bool bSearchDown);
+	void GetColors(ITEMINFO* pItem);
 	afx_msg void OnFindDialog();
 	afx_msg void OnFindString();
 	afx_msg void OnSetBookmark();

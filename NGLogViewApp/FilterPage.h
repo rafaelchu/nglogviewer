@@ -1,8 +1,12 @@
 #pragma once
 
 #include "../Utility/CRegSetting.h"
+#include "ColorPair.h"
+#include <map>
+#include <string>
+using namespace std;
 // CFilterPage dialog
-
+#define MAX_HIGHLIGHT_FILTER 20
 typedef struct tagPROPINFO {
 	wchar_t wszExcludeList[_MAX_PATH];
 	wchar_t wszIncludeList[_MAX_PATH];
@@ -18,6 +22,9 @@ typedef struct tagPROPINFO {
 	}
 
 } PROPINFO;
+
+
+
 
 class CFilterPage : public CPropertyPage
 {
@@ -36,7 +43,10 @@ public:
 
 	PROPINFO m_PropInfo;
 	HBRUSH   m_brMine;
-
+	wstring m_wstrHighlight[MAX_HIGHLIGHT_FILTER];
+	void RefreshHighLightData();
+	map<wstring,  COLORPAIR> GetMapStringToColors();
+	int m_nEditNowSelect;
 
 protected:
 	CRegSetting* m_pRegSetting;

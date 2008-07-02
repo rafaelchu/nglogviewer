@@ -1,9 +1,20 @@
 // CNGListViewEx.h : interface of the CNGListViewEx class
+#pragma once
+
 #include <set>
+#include "..\NGLogViewer\CLogFileLoader.h"
+#include "ColorPair.h"
+
 using namespace std;
 
 #define NG_COLOR_BOOKMARK_TEXT		0x000000FF
 #define NG_COLOR_BOOKMARK_BK		0x0000FFFF
+
+typedef struct tagITEMINFO {
+	INT         nIndex;
+	CLineBuffer *m_cLineBuffer;
+	COLORPAIR   colors;
+} ITEMINFO;
 
 class CNGListViewEx : public CListView
 {
