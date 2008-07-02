@@ -90,7 +90,9 @@ BOOL CFilterPage::OnInitDialog()
 		wsprintf(wszString, L"Filter %d", i+1);
 		pComboBox->AddString(wszString);
 	}
+	m_nEditNowSelect =0;
 	pComboBox->SetCurSel(0);
+	pComboBox->SetWindowText(m_wstrHighlight[m_nEditNowSelect].c_str());
 	return TRUE;
 
 }
@@ -116,6 +118,8 @@ BOOL CFilterPage::OnApply()
 	m_pRegSetting->WriteRegKey(L"IncludeList", m_PropInfo.wszIncludeList);
 	m_pRegSetting->WriteRegKey(L"EnableEmptyString", m_PropInfo.bEnableEmptyString);
 	m_pRegSetting->WriteRegKey(L"EnableMatchCase", m_PropInfo.bEnableMatchCase);
+
+	RefreshHighLightData();
 
 	SetModified (TRUE);
 	return TRUE;
@@ -155,8 +159,27 @@ END_MESSAGE_MAP()
 
 void CFilterPage::OnCbnSelchangeComboHighlight()
 {
-	CComboBox *pEditHighlight = (CComboBox*)GetDlgItem(IDC_EDIT_HIGHLIGHT);
-	pEditHighlight->SetWindowText(L"abcde");
+	CComboBox *pComboHighlight = (CComboBox*)GetDlgItem(IDC_COMBO_HIGHLIGHT);
+	CEdit *pEditHighlight = (CEdit*)GetDlgItem(IDC_EDIT_HIGHLIGHT);
+
+	RefreshHighLightData();
+	
+	int nSelect = pComboHighlight->GetCurSel();
+	if (CB_ERR!= nSelect)
+	{
+		m_nEditNowSelect = nSelect;
+		pEditHighlight->SetWindowText(m_wstrHighlight[nSelect].c_str());
+	}
+}
+
+void CFilterPage::RefreshHighLightData()
+{
+	CString cstr;
+	GetDlgItemText(IDC_EDIT_HIGHLIGHT, cstr);
+	wchar_t *wszText = new wchar_t[cstr.GetLength()+1];
+	wsprintf(wszText, TEXT("%s"), cstr);
+	m_wstrHighlight[m_nEditNowSelect] = wszText;
+	delete [] wszText;
 }
 
 HBRUSH CFilterPage::OnCtlColor(CDC* pDC, CWnd* pWnd, UINT nCtlColor)
@@ -178,7 +201,6 @@ HBRUSH CFilterPage::OnCtlColor(CDC* pDC, CWnd* pWnd, UINT nCtlColor)
 	else if ((pWnd->GetDlgCtrlID() == IDC_COMBO_HIGHLIGHT) )
 	{
 		CEdit *pEditHighlight = (CEdit*)GetDlgItem(IDC_EDIT_HIGHLIGHT);
-		pEditHighlight->SetWindowText(L"abcde");
 		HBRUSH   hbr   =   CDialog::OnCtlColor(pDC,   pWnd,   nCtlColor);   
 		return   hbr;   
 	}
@@ -188,4 +210,37 @@ HBRUSH CFilterPage::OnCtlColor(CDC* pDC, CWnd* pWnd, UINT nCtlColor)
 		return   hbr;   
 	}   
 
+}
+
+std::map<std::wstring, COLORPAIR> CFilterPage::GetMapStringToColors()
+{
+	std::map<std::wstring, COLORPAIR> mapRet;
+
+	for (int i=0;i<MAX_HIGHLIGHT_FILTER;++i)
+	{
+		wstring wstr = this->m_wstrHighlight[i];
+		if (wstr.length()==0)
+			continue;
+		COLORPAIR colors;
+		colors.m_cBkColor = (COLORREF)DWLISTCOLOR[i*2+1];
+		colors.m_cTextColor = (COLORREF)DWLISTCOLOR[i*2];
+
+		const wchar_t *wstrKeyWords;
+		wstrKeyWords = wstr.c_str();
+		wchar_t *pwszBuffer = new wchar_t [wcslen(wstrKeyWords)+1];
+
+		wcscpy(pwszBuffer, wstrKeyWords);
+
+		wchar_t wszDelims[] = L";";
+		wchar_t *result = NULL;
+		result = wcstok(pwszBuffer, wszDelims );
+		while (result != NULL)
+		{
+			mapRet[result] = colors;
+			result = wcstok(NULL, wszDelims);
+		}
+		delete [] pwszBuffer;
+		pwszBuffer = NULL;
+	}
+	return mapRet;
 }
