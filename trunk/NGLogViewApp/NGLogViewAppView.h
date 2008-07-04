@@ -64,6 +64,7 @@ protected:
 	FINDINFO m_fdinfo;
 	bool m_bRemoveShowSelAlwaysAtFindDialogExit;
 	CFindReplaceDialog* m_pFindDialog;
+	CImageList m_ilImage;
 	
 	map<std::wstring,  COLORPAIR> m_mapHighLightString;
 	
