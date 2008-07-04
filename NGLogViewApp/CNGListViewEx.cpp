@@ -109,6 +109,7 @@ void CNGListViewEx::DrawItem(LPDRAWITEMSTRUCT lpDrawItemStruct)
 	CDC* pDC = CDC::FromHandle(lpDrawItemStruct->hDC);
 	CRect rcItem(lpDrawItemStruct->rcItem);
 	UINT uiFlags = ILD_TRANSPARENT;
+	CImageList* pImageList;
 	int nItem = lpDrawItemStruct->itemID;
 	BOOL bFocus = (GetFocus() == this);
 	COLORREF clrTextSave = 0;
@@ -176,6 +177,33 @@ void CNGListViewEx::DrawItem(LPDRAWITEMSTRUCT lpDrawItemStruct)
 		pDC->FillRect(rcAllLabels, &cbr);
 	}
 
+	// set color and mask for the icon
+
+	if (lvi.state & LVIS_CUT)
+	{
+		clrImage = m_clrBkgnd;
+		uiFlags |= ILD_BLEND50;
+	}
+	else if (bSelected)
+	{
+		clrImage = ::GetSysColor(COLOR_HIGHLIGHT);
+		uiFlags |= ILD_BLEND50;
+	}
+
+	// draw state icon
+
+	UINT nStateImageMask = lvi.state & LVIS_STATEIMAGEMASK;
+	if (nStateImageMask)
+	{
+		int nImage = (nStateImageMask>>12) - 1;
+		pImageList = ListCtrl.GetImageList(LVSIL_STATE);
+		if (pImageList)
+		{
+			pImageList->Draw(pDC, nImage,
+				CPoint(rcItem.left, rcItem.top), ILD_TRANSPARENT);
+		}
+	}
+	
 // draw item label
 
 	ListCtrl.GetItemRect(nItem, rcItem, LVIR_LABEL);
