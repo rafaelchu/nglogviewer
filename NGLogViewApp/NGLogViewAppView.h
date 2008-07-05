@@ -73,6 +73,8 @@ protected:
 	void SetProperties(PROPINFO* props);
 	bool FindWhatYouNeed(CString strFind, bool bMatchCase, bool bMatchWholeWord, bool bSearchDown);
 	void GetColors(ITEMINFO* pItem);
+	void CleanItemState(int nItem , UINT uStateFlag = LVIS_SELECTED | LVIS_FOCUSED, UINT uStateMask = LVIF_STATE | LVIS_STATEIMAGEMASK);
+	void UpdateItemState(int nItem, UINT uStateFlag = LVIS_SELECTED | LVIS_FOCUSED, UINT uStateMask = LVIF_STATE | LVIS_STATEIMAGEMASK);
 	afx_msg void OnFindDialog();
 	afx_msg void OnFindString();
 	afx_msg void OnSetBookmark();
