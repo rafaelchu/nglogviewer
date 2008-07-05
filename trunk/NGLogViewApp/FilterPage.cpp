@@ -57,6 +57,23 @@ CFilterPage::CFilterPage()
 	: CPropertyPage(CFilterPage::IDD)
 {
 	m_pRegSetting = NULL;
+	m_pRegSetting = new CRegSetting(APP_SETTING_PATH);
+	// 1. Load m_PropInfo from reg key
+	m_pRegSetting->ReadRegKey(L"ExcludeList", _MAX_PATH, m_PropInfo.wszExcludeList);
+	m_pRegSetting->ReadRegKey(L"IncludeList", _MAX_PATH, m_PropInfo.wszIncludeList);
+	m_pRegSetting->ReadRegKey(L"EnableEmptyString", m_PropInfo.bEnableEmptyString);
+	m_pRegSetting->ReadRegKey(L"EnableMatchCase", m_PropInfo.bEnableMatchCase);
+
+	//Load HighLightString
+	for(int i =0;i<MAX_HIGHLIGHT_FILTER; ++i)
+	{
+		wchar_t wszKeyName[32]; 
+		wchar_t wszHighLightString[MAX_HIGHLIGHT_STRING_LENGTH] = {0};
+		wsprintf(wszKeyName, L"HighLightString%d",i );
+		m_pRegSetting->ReadRegKey(wszKeyName, MAX_HIGHLIGHT_STRING_LENGTH, wszHighLightString);
+		m_wstrHighlight[i] = wszHighLightString;
+	}
+
 }
 
 CFilterPage::~CFilterPage()
@@ -69,20 +86,13 @@ CFilterPage::~CFilterPage()
 }
 BOOL CFilterPage::OnInitDialog()
 {
-	m_pRegSetting = new CRegSetting(APP_SETTING_PATH);
-	// 1. Load m_PropInfo from reg key
-	m_pRegSetting->ReadRegKey(L"ExcludeList", _MAX_PATH, m_PropInfo.wszExcludeList);
-	m_pRegSetting->ReadRegKey(L"IncludeList", _MAX_PATH, m_PropInfo.wszIncludeList);
-	m_pRegSetting->ReadRegKey(L"EnableEmptyString", m_PropInfo.bEnableEmptyString);
-	m_pRegSetting->ReadRegKey(L"EnableMatchCase", m_PropInfo.bEnableMatchCase);
-
-	// 2. Set m_PropInfo into UI
+	// Set m_PropInfo into UI
 	SetDlgItemText(IDC_EDIT_EXCLUDE, m_PropInfo.wszExcludeList);
 	SetDlgItemText(IDC_EDIT_INCLUDE, m_PropInfo.wszIncludeList);
 	SetDlgItemCheck(IDC_CHECK_EMPTY_STRING, m_PropInfo.bEnableEmptyString);
 	SetDlgItemCheck(IDC_CHECK_MATCH_CASE, m_PropInfo.bEnableMatchCase);
 
-	//2. Set HighLight 20 items
+	// Set HighLight 20 items
 	CComboBox *pComboBox = (CComboBox *) GetDlgItem(IDC_COMBO_HIGHLIGHT);
 	for (int i =0;i<20; i++)
 	{
@@ -90,9 +100,10 @@ BOOL CFilterPage::OnInitDialog()
 		wsprintf(wszString, L"Filter %d", i+1);
 		pComboBox->AddString(wszString);
 	}
+
 	m_nEditNowSelect =0;
 	pComboBox->SetCurSel(0);
-	pComboBox->SetWindowText(m_wstrHighlight[m_nEditNowSelect].c_str());
+	SetDlgItemText(IDC_EDIT_HIGHLIGHT, m_wstrHighlight[m_nEditNowSelect].c_str());
 	return TRUE;
 
 }
@@ -120,6 +131,15 @@ BOOL CFilterPage::OnApply()
 	m_pRegSetting->WriteRegKey(L"EnableMatchCase", m_PropInfo.bEnableMatchCase);
 
 	RefreshHighLightData();
+
+	//Save HighLightString
+	for(int i =0;i<MAX_HIGHLIGHT_FILTER; ++i)
+	{
+		wchar_t wszKeyName[32];
+		wsprintf(wszKeyName, L"HighLightString%d",i );
+		m_pRegSetting->WriteRegKey(wszKeyName, m_wstrHighlight[i].c_str());
+	}
+
 
 	SetModified (TRUE);
 	return TRUE;
