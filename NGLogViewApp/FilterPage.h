@@ -7,6 +7,7 @@
 using namespace std;
 // CFilterPage dialog
 #define MAX_HIGHLIGHT_FILTER 20
+#define MAX_HIGHLIGHT_STRING_LENGTH  256
 typedef struct tagPROPINFO {
 	wchar_t wszExcludeList[_MAX_PATH];
 	wchar_t wszIncludeList[_MAX_PATH];
