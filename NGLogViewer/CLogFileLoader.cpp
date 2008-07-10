@@ -176,7 +176,10 @@ int CLogFileLoader::GetLineBufferData(wchar_t *wszBuffer, class CLineBuffer *pCL
 	{
 		wchar_t *pWstr;
 		pWstr = wcschr(wszBuffer, '[');
-		pCLineBuffer->m_wstrMessage = pWstr;
+		if (pWstr!=NULL)
+			pCLineBuffer->m_wstrMessage = pWstr;
+		else 
+			pCLineBuffer->m_wstrMessage = L"";
 		pCLineBuffer->m_wstrTag =L"";
 	}
 	
