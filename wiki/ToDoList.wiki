@@ -1,9 +1,8 @@
 #summary To do list
-= Idea or brain storming proble,=
+= Idea or brain storming problem=
 
+ * To drag and drop to load file.
  * How to get Tag from a debug of string?
- * Is bookmark good function? 
  * Select columns!?
     * Could we select columns to display
- * Callback function from Clogview when loading or run filter result.
  
