@@ -25,13 +25,14 @@
 #define HOT_KEY_FIND_STRING             32775
 #define ID_ACCELERATOR32776             32776
 #define HOT_KEY_FIND_NEXT_BOOKMARK      32776
+#define HOT_KEY_OPEN_PROPERTY_PAGE      32778
 
 // Next default values for new objects
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NEXT_RESOURCE_VALUE        135
-#define _APS_NEXT_COMMAND_VALUE         32778
+#define _APS_NEXT_COMMAND_VALUE         32780
 #define _APS_NEXT_CONTROL_VALUE         1011
 #define _APS_NEXT_SYMED_VALUE           101
 #endif
