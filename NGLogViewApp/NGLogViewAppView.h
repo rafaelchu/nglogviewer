@@ -30,6 +30,7 @@ class CNGLogViewAppView : public CNGListViewEx, public CLogFileLoaderCallback
 {
 protected: // create from serialization only
 	CNGLogViewAppView();
+
 	DECLARE_DYNCREATE(CNGLogViewAppView)
 
 // Attributes
@@ -84,7 +85,7 @@ protected:
 	afx_msg void OnFileOpen();
 	afx_msg void OnDeleteItem(NMHDR* pNMHDR, LRESULT* pResult);
 	afx_msg LRESULT OnFindDialogMessage(WPARAM wParam, LPARAM lParam);
-
+	void runOpenFile(CString str);
 // Generated message map functions
 	DECLARE_MESSAGE_MAP()
 public:
