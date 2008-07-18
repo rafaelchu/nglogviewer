@@ -19,6 +19,9 @@
 #define IDC_EDIT_HIGHLIGHT              1005
 #define IDC_COMBOBOXEX1                 1006
 #define IDC_COMBO_HIGHLIGHT_EDIT        1009
+#define IDC_BOOKMARKALL                 1011
+#define IDC_BOOKMARK_ALL                1011
+#define IDD_NGFINDDIALOG                1540
 #define ID_EDIT_FONT                    32771
 #define ID_EDIT_PROPERTIES              32772
 #define HOT_KEY_FIND_DLG                32773
@@ -33,7 +36,7 @@
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NEXT_RESOURCE_VALUE        141
 #define _APS_NEXT_COMMAND_VALUE         32780
-#define _APS_NEXT_CONTROL_VALUE         1011
+#define _APS_NEXT_CONTROL_VALUE         1012
 #define _APS_NEXT_SYMED_VALUE           102
 #endif
 #endif

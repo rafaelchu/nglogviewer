@@ -214,6 +214,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\NGFindDialog.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\NGLogViewApp.cpp"
 				>
 			</File>
@@ -281,6 +285,10 @@
 			</File>
 			<File
 				RelativePath=".\MainFrm.h"
+				>
+			</File>
+			<File
+				RelativePath=".\NGFindDialog.h"
 				>
 			</File>
 			<File
