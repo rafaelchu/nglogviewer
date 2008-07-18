@@ -55,7 +55,7 @@
 #include "../Utility/Debug.h"
 
 #define WM_USER_APPLY WM_USER+0x100
-
+#define WM_USER_SET_BOOKMARK_ALL WM_USER+0x101
 
 
 

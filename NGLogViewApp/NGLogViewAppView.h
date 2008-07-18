@@ -8,7 +8,7 @@
 #include "NGLogViewAppDoc.h"
 #include "CNGListViewEx.h"
 #include "FilterPage.h"
-
+#include "NGFindDialog.h"
 
 
 typedef struct tagFINDINFO{
@@ -64,7 +64,7 @@ protected:
 	PROPINFO m_props;
 	FINDINFO m_fdinfo;
 	bool m_bRemoveShowSelAlwaysAtFindDialogExit;
-	CFindReplaceDialog* m_pFindDialog;
+	CNGFindDialog* m_pFindDialog;
 	CImageList m_ilImage;
 	
 	map<std::wstring,  COLORPAIR> m_mapHighLightString;
@@ -86,6 +86,9 @@ protected:
 	afx_msg void OnDeleteItem(NMHDR* pNMHDR, LRESULT* pResult);
 	afx_msg LRESULT OnFindDialogMessage(WPARAM wParam, LPARAM lParam);
 	void runOpenFile(CString str);
+	void OnSetBookmarkAll();
+	bool IsFindString(ITEMINFO* pItem);
+
 // Generated message map functions
 	DECLARE_MESSAGE_MAP()
 public:
