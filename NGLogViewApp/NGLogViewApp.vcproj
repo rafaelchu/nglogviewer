@@ -318,6 +318,14 @@
 				>
 			</File>
 			<File
+				RelativePath=".\res\bookmark.ico"
+				>
+			</File>
+			<File
+				RelativePath=".\res\bookmark1.ico"
+				>
+			</File>
+			<File
 				RelativePath=".\res\NGLogViewApp.ico"
 				>
 			</File>
