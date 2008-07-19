@@ -96,6 +96,7 @@ BEGIN
         MENUITEM "&Paste\tCtrl+V",              ID_EDIT_PASTE
         MENUITEM "Font...",                     ID_EDIT_FONT
         MENUITEM "Properties...",               ID_EDIT_PROPERTIES
+        MENUITEM "Clear Bookmark",              ID_EDIT_CLEARBOOKMARK
     END
     POPUP "&View"
     BEGIN
