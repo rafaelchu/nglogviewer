@@ -88,6 +88,7 @@ protected:
 	void runOpenFile(CString str);
 	void OnSetBookmarkAll();
 	bool IsFindString(ITEMINFO* pItem);
+	void OnClearBookmark();
 
 // Generated message map functions
 	DECLARE_MESSAGE_MAP()
