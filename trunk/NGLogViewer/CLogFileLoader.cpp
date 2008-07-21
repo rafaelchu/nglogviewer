@@ -3,6 +3,58 @@
 
 using namespace std;
 
+#include <string.h>
+#include <malloc.h>
+#include <tchar.h>
+
+wchar_t *wcsistr
+(
+ const wchar_t *  szStringToBeSearched,
+ const wchar_t *  szSubstringToSearchFor
+ )
+{
+	wchar_t   *  pPos = NULL;
+	wchar_t   *  szCopy1 = NULL;
+	wchar_t   *  szCopy2 = NULL;
+
+
+	// verify parameters
+	if ( szStringToBeSearched == NULL ||
+		szSubstringToSearchFor == NULL )
+	{
+		return NULL;
+	}
+
+	// empty substring - return input (consistent with strstr)
+	if ( wcslen(szSubstringToSearchFor) == 0 ) {
+		return NULL;
+	}
+
+	szCopy1 = _wcslwr(_wcsdup(szStringToBeSearched));
+	szCopy2 = _wcslwr(_wcsdup(szSubstringToSearchFor));
+
+	if ( szCopy1 == NULL || szCopy2 == NULL  ) {
+		// another option is to raise an exception here
+		free((void*)szCopy1);
+		free((void*)szCopy2);
+		return NULL;
+	}
+
+	pPos = wcsstr(szCopy1, szCopy2);
+
+	if ( pPos != NULL ) {
+		// map to the original string
+		pPos = (wchar_t *)szStringToBeSearched + (pPos - szCopy1);
+	}
+
+	free((void*)szCopy1);
+	free((void*)szCopy2);
+
+	return pPos;
+} // stristr(...)
+
+
+
 int CLogFileLoader::PreProcessing()
 {
 	this->ClearAll();
@@ -366,7 +418,7 @@ bool CLogFileLoader::IsFilterLineByTags(class CLineBuffer *pCLineBuffer)
 	vector<wstring>::iterator pos;
 	for (pos = m_pVecWstrFilterTags->begin();pos != m_pVecWstrFilterTags->end();++pos)
 	{
-		if (wcsstr(pCLineBuffer->m_wstrMessage.c_str(), pos->c_str()) != NULL)
+		if (CheckSubString(pCLineBuffer->m_wstrMessage.c_str(), pos->c_str()) != NULL)
 		{
 			return true;
 		}
@@ -380,7 +432,7 @@ bool CLogFileLoader::IsFilterLineByExcludeKeyWords(class CLineBuffer *pCLineBuff
 	vector<wstring>::iterator pos;
 	for (pos = m_vecWstrFilterKeyWords.begin();pos != m_vecWstrFilterKeyWords.end();++pos)
 	{
-		if (wcsstr(pCLineBuffer->m_wstrMessage.c_str(), pos->c_str()) != NULL)
+		if (CheckSubString(pCLineBuffer->m_wstrMessage.c_str(), pos->c_str()) != NULL)
 		{
 			return true;
 		}
@@ -393,7 +445,7 @@ bool CLogFileLoader::IsFilterLineByIncludeKeyWords(class CLineBuffer *pCLineBuff
 	vector<wstring>::iterator pos;
 	for (pos = m_vecWstrIncludeKerWords.begin();pos != m_vecWstrIncludeKerWords.end();++pos)
 	{
-		if (wcsstr(pCLineBuffer->m_wstrMessage.c_str(), pos->c_str()) != NULL)
+		if (CheckSubString(pCLineBuffer->m_wstrMessage.c_str(), pos->c_str()) != NULL)
 		{
 			return false;
 		}
@@ -635,6 +687,7 @@ const wchar_t * CLogFileLoader::CheckSubString(const wchar_t *s1, const wchar_t 
 	if (m_bEnableMatchCaseStringCompare)
 		return wcsstr(s1,s2);
 	else
-		return wcsstr(s1,s2); //TODO: NEED To Find a function for ignore case w strstr.
+		return wcsistr(s1,s2); //TODO: NEED To Find a function for ignore case w strstr.
 
 }
+
