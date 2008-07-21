@@ -22,6 +22,12 @@ using namespace __gnu_cxx;
 
 #define LINE_BUFFER_SIZE	2048
 
+wchar_t *wcsistr
+(
+ const wchar_t *  szStringToBeSearched,
+ const wchar_t *  szSubstringToSearchFor
+ );
+
 class CLogFileLoaderCallback
 {
 public:

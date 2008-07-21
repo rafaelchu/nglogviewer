@@ -89,6 +89,7 @@ protected:
 	void OnSetBookmarkAll();
 	bool IsFindString(ITEMINFO* pItem);
 	void OnClearBookmark();
+	const wchar_t * CNGLogViewAppView::CheckSubString(const wchar_t *s1, const wchar_t *s2);
 
 // Generated message map functions
 	DECLARE_MESSAGE_MAP()
