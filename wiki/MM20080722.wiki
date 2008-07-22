@@ -7,13 +7,13 @@ Add your content here.
 
 = Details =
 
-    1. Ignore case (Gary) 
-    1. 20 filter highlight Edits color (Gary) 
-    1. bookmark all (Ning)
-    1. clean bookmark (Ning) 
-    1. bookmark panel (x)    
-    1. Support Merge diff (x)    
-    1. Select column (Ning) 
-    1. Bookmark in file line number (Gary) 
-    1. Only display highlight (x)    
-    1. Copy Paste (Shelly) 
+    # Ignore case (Gary) 
+    # 20 filter highlight Edits color (Gary) 
+    # bookmark all (Ning)
+    # clean bookmark (Ning) 
+    # bookmark panel (x)    
+    # Support Merge diff (x)    
+    # Select column (Ning) 
+    # Bookmark in file line number (Gary) 
+    # Only display highlight (x)    
+    # Copy Paste (Shelly) 
