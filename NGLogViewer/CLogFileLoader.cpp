@@ -179,6 +179,7 @@ int CLogFileLoader::GetLineBufferData(wchar_t *wszBuffer, class CLineBuffer *pCL
 	
 	resultLineNumber = wcstok(wszBuffer, wszDelims );
 	resultTime = wcstok(NULL, wszDelims);
+	pCLineBuffer->m_wstrTimeString = resultTime;
 	wszBuffer = wcstok(NULL, wszDelims2);
 	if (NULL!=wcschr(resultTime, ':'))
 	{
