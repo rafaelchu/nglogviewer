@@ -45,6 +45,7 @@ public:
 	time_t m_tTime;
 	wstring m_wstrTag;
 	wstring m_wstrMessage;
+	wstring m_wstrTimeString;
 };
 
 class CLogFileLoader
