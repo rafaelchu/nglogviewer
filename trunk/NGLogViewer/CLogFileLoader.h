@@ -48,6 +48,9 @@ public:
 	wstring m_wstrTimeString;
 };
 
+#define CLOGFILELOADER_DIRTYBIT_INCLUDE	1
+#define CLOGFILELOADER_DIRTYBIT_EXCLUDE 2
+
 class CLogFileLoader
 {
 
@@ -125,6 +128,16 @@ private:
 	
 	int CompareString(const wchar_t *s1, const wchar_t *s2);
 	const wchar_t * CheckSubString(const wchar_t *s1, const wchar_t *s2);
+
+	//Dirty function 
+	bool IsNeedDirtyReFilterData();
+	int m_bReFilterDirtyBit;
+	void SetDirtyBit(int bit);
+	void ReSetDirtyBit(int bit=0xffffffff);
+	wstring m_wstrInclude; 
+	wstring m_wstrExclude;
+	bool ClearKeyWordInclude();
+	bool ClearKeyWordExclude();
 	
 public:
 	CLogFileLoader(wstring wstrFileName);
@@ -159,6 +172,7 @@ public:
 	// Keyword Filter
 	int SetKeyWordIncludeFilter(const wchar_t *wstrKeyWords);
 	int SetKeyWordExcludeFilter(const wchar_t *wstrKeyWords);
+
 
 	int RunFilterResult();
 
