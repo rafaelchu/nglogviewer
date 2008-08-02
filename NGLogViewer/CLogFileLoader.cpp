@@ -315,6 +315,7 @@ int CLogFileLoader::ClearAll()
 	m_bEnableExcludeKeywordsFilter = false;
 	m_pVecIntFilterProcessNumber = NULL;
 	m_pVecWstrFilterTags = NULL;
+	m_bReFilterDirtyBit = 0;
 	m_vecWstrFilterKeyWords.clear();
 	
 	for (int i = 0;i<m_vecpRunBuffer.size();++i)
@@ -345,6 +346,10 @@ int CLogFileLoader::GetResultSize()
 
 int CLogFileLoader::RunFilterResult()
 {
+	if (!IsNeedDirtyReFilterData())
+	{
+		return 0;
+	}
 	m_setResultLine.clear();
 	m_vecResultLinePos.clear();
 	m_wiFile.seekg(0);
@@ -394,6 +399,8 @@ int CLogFileLoader::RunFilterResult()
 
 	if (m_CallbackObject)
 		m_CallbackObject->OnPercentCallback(1.0f);
+
+	ReSetDirtyBit();
 	return 0;
 }
 
@@ -603,10 +610,15 @@ int CLogFileLoader::SetEnableFilterEmptyMessage(bool bInput)
 
 int CLogFileLoader::SetKeyWordExcludeFilter(const wchar_t *wstrKeyWords)
 {
+	if (CompareString(wstrKeyWords, m_wstrExclude.c_str())==0)
+	{
+		return 0;
+	}
+	SetDirtyBit(CLOGFILELOADER_DIRTYBIT_EXCLUDE);
+	m_wstrExclude=wstrKeyWords;
+	ClearKeyWordExclude();
 	if (wstrKeyWords == NULL)
 	{
-		m_bEnableExcludeKeywordsFilter = false;
-		m_vecWstrFilterKeyWords.clear();
 		return 0;
 	}
 
@@ -630,13 +642,18 @@ int CLogFileLoader::SetKeyWordExcludeFilter(const wchar_t *wstrKeyWords)
 
 int CLogFileLoader::SetKeyWordIncludeFilter(const wchar_t *wstrKeyWords)
 {
+	if (CompareString(wstrKeyWords, m_wstrInclude.c_str())==0)
+	{
+		return 0;
+	}
+	SetDirtyBit(CLOGFILELOADER_DIRTYBIT_INCLUDE);
+	m_wstrInclude=wstrKeyWords;
+	ClearKeyWordInclude();
 	if (wstrKeyWords == NULL || 
 		(CompareString(wstrKeyWords, L"*")==0) ||
 		(CompareString(wstrKeyWords, L"") ==0)
 		)
 	{
-		m_bEnableIncludeKeeywordsFilter = false;
-		m_vecWstrIncludeKerWords.clear();
 		return 0;
 	}
 
@@ -704,3 +721,31 @@ bool CLogFileLoader::IsHeaderLineOfLogfile(const wchar_t *wsz)
 	return false;
 }
 
+bool CLogFileLoader::ClearKeyWordInclude()
+{
+	m_bEnableIncludeKeeywordsFilter = false;
+	m_vecWstrIncludeKerWords.clear();
+	return true;
+}
+
+bool CLogFileLoader::ClearKeyWordExclude()
+{
+	m_bEnableExcludeKeywordsFilter = false;
+	m_vecWstrFilterKeyWords.clear();
+	return true;
+}
+
+bool CLogFileLoader::IsNeedDirtyReFilterData()
+{
+	return (m_bReFilterDirtyBit!=0);
+}
+
+void CLogFileLoader::SetDirtyBit(int bit)
+{
+	m_bReFilterDirtyBit|=bit;
+}
+
+void CLogFileLoader::ReSetDirtyBit(int bit/* =0xffffffff */)
+{
+	m_bReFilterDirtyBit&=(~bit);
+}
