@@ -58,6 +58,9 @@ private:
 	set<int> m_setIntProcessNumber;
 	set<int> m_setResultLine;
 	vector<int>  m_vecResultLinePos;
+
+	//Check the line data is header of log file or not.
+	bool IsHeaderLineOfLogfile(const wchar_t *wsz);
 	
 	//Data after preprocessing
 	int m_nMinLineNumber;

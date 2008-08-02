@@ -70,6 +70,8 @@ int CLogFileLoader::PreProcessing()
 	
 	while(m_wiFile.getline(wszLineBuffer, LINE_BUFFER_SIZE))
 	{
+		if (IsHeaderLineOfLogfile(wszLineBuffer))
+			continue;
 		GetLineBufferData(wszLineBuffer, pCLineBuffer);
 		//1. Preprocess the Max/min line number
 		{
@@ -363,6 +365,8 @@ int CLogFileLoader::RunFilterResult()
 	int llpos = m_wiFile.tellg();
 	while(m_wiFile.getline(wszLineBuffer, LINE_BUFFER_SIZE))
 	{
+		if (IsHeaderLineOfLogfile(wszLineBuffer))
+			continue;
 		class CLineBuffer *pCLineBuffer = new CLineBuffer();
 		GetLineBufferData(wszLineBuffer, pCLineBuffer, false);
 		if (! IsFilterLine(pCLineBuffer))
@@ -688,6 +692,14 @@ const wchar_t * CLogFileLoader::CheckSubString(const wchar_t *s1, const wchar_t 
 		return wcsstr(s1,s2);
 	else
 		return wcsistr(s1,s2); //TODO: NEED To Find a function for ignore case w strstr.
+}
 
+bool CLogFileLoader::IsHeaderLineOfLogfile(const wchar_t *wsz)
+{
+	if (wsz[0]=='[')
+	{
+		return true;
+	}
+	return false;
 }
 
