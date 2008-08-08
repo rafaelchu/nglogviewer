@@ -48,6 +48,13 @@ public:
 	void RefreshHighLightData();
 	map<wstring,  COLORPAIR> GetMapStringToColors();
 	int m_nEditNowSelect;
+	DWORD m_dwHighLightColors[40]; 
+	void LoadHighLightColorsFromRegKey();
+	void SaveHighLightColorsToRegKey();
+	DWORD GetHighLightColor(int nIndex, BOOL bBG = FALSE);
+	void SetHighLightColor(int nIndex,DWORD color ,BOOL bBG = FALSE);
+	void HandleChangeHighLoghtColorDialogFunction(BOOL bBG = FALSE);
+
 
 protected:
 	CRegSetting* m_pRegSetting;
@@ -57,4 +64,6 @@ protected:
 public:
 	afx_msg void OnCbnSelchangeComboHighlight();
 	afx_msg HBRUSH OnCtlColor(CDC* pDC, CWnd* pWnd, UINT nCtlColor);
+	afx_msg void OnBnClickedButtonBgColor();
+	afx_msg void OnBnClickedButtonFgColor();
 };

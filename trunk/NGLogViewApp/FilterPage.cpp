@@ -4,7 +4,10 @@
 #include "stdafx.h"
 #include "NGLogViewApp.h"
 #include "FilterPage.h"
-DWORD DWLISTCOLOR[40] =
+
+// CFilterPage dialog
+#define APP_SETTING_PATH (L"SOFTWARE\\NG\\LOGViewer")
+DWORD DEFAULT_dwFilterColors[40] =
 {
 	0xFFFFFF,
 	0xFF    ,
@@ -47,8 +50,6 @@ DWORD DWLISTCOLOR[40] =
 	0x0     ,
 	0x80FFFF,
 };
-// CFilterPage dialog
-#define APP_SETTING_PATH (L"SOFTWARE\\NG\\LOGViewer")
 
 
 IMPLEMENT_DYNAMIC(CFilterPage, CPropertyPage)
@@ -74,6 +75,9 @@ CFilterPage::CFilterPage()
 		m_wstrHighlight[i] = wszHighLightString;
 	}
 
+	//Load HighLight
+	memcpy(m_dwHighLightColors, DEFAULT_dwFilterColors, sizeof(DWORD) * 40);
+	LoadHighLightColorsFromRegKey();
 }
 
 CFilterPage::~CFilterPage()
@@ -172,6 +176,8 @@ void CFilterPage::SetDlgItemCheck(int nID, bool bInput)
 BEGIN_MESSAGE_MAP(CFilterPage, CPropertyPage)
 	ON_CBN_SELCHANGE(IDC_COMBO_HIGHLIGHT, &CFilterPage::OnCbnSelchangeComboHighlight)
 	ON_WM_CTLCOLOR()
+	ON_BN_CLICKED(IDC_BUTTON_BG_COLOR, &CFilterPage::OnBnClickedButtonBgColor)
+	ON_BN_CLICKED(IDC_BUTTON_FG_COLOR, &CFilterPage::OnBnClickedButtonFgColor)
 END_MESSAGE_MAP()
 
 
@@ -211,8 +217,8 @@ HBRUSH CFilterPage::OnCtlColor(CDC* pDC, CWnd* pWnd, UINT nCtlColor)
 		COLORREF dwBkColor;
 		CComboBox *pComboBox = (CComboBox *) GetDlgItem(IDC_COMBO_HIGHLIGHT);
 		int nCurrent = pComboBox->GetCurSel();
-		dwTextColor = (COLORREF)DWLISTCOLOR[nCurrent*2];
-		dwBkColor = (COLORREF)DWLISTCOLOR[nCurrent*2+1];
+		dwTextColor = (COLORREF)m_dwHighLightColors[nCurrent*2];
+		dwBkColor = (COLORREF)m_dwHighLightColors[nCurrent*2+1];
 		pDC->SetTextColor(dwTextColor);          
 		pDC->SetBkColor(dwBkColor);
 		m_brMine = ::CreateSolidBrush(dwBkColor);   
@@ -242,8 +248,8 @@ std::map<std::wstring, COLORPAIR> CFilterPage::GetMapStringToColors()
 		if (wstr.length()==0)
 			continue;
 		COLORPAIR colors;
-		colors.m_cBkColor = (COLORREF)DWLISTCOLOR[i*2+1];
-		colors.m_cTextColor = (COLORREF)DWLISTCOLOR[i*2];
+		colors.m_cBkColor = (COLORREF)GetHighLightColor(i, TRUE);
+		colors.m_cTextColor = (COLORREF)GetHighLightColor(i, FALSE);
 
 		const wchar_t *wstrKeyWords;
 		wstrKeyWords = wstr.c_str();
@@ -263,4 +269,88 @@ std::map<std::wstring, COLORPAIR> CFilterPage::GetMapStringToColors()
 		pwszBuffer = NULL;
 	}
 	return mapRet;
+}
+
+void CFilterPage::LoadHighLightColorsFromRegKey()
+{
+
+	for(int i =0;i<MAX_HIGHLIGHT_FILTER; ++i)
+	{
+		wchar_t wszKeyName[32]; 
+		DWORD dwBG = GetHighLightColor(i, TRUE);
+		wsprintf(wszKeyName, L"HighLightBG%d",i );
+		m_pRegSetting->ReadRegKey(wszKeyName, dwBG);
+		SetHighLightColor(i, dwBG,TRUE);
+	}
+
+	for(int i =0;i<MAX_HIGHLIGHT_FILTER; ++i)
+	{
+		wchar_t wszKeyName[32]; 
+		DWORD dwFG =GetHighLightColor(i, FALSE);
+		wsprintf(wszKeyName, L"HighLightFG%d",i );
+		m_pRegSetting->ReadRegKey(wszKeyName, dwFG);
+		SetHighLightColor(i, dwFG, FALSE);
+	}
+}
+
+void CFilterPage::SaveHighLightColorsToRegKey()
+{
+	for(int i =0;i<MAX_HIGHLIGHT_FILTER; ++i)
+	{
+		wchar_t wszKeyName[32]; 
+		DWORD dwBG = GetHighLightColor(i, TRUE);
+		wsprintf(wszKeyName, L"HighLightBG%d",i );
+		m_pRegSetting->WriteRegKey(wszKeyName, dwBG);
+	}
+
+	for(int i =0;i<MAX_HIGHLIGHT_FILTER; ++i)
+	{
+		wchar_t wszKeyName[32]; 
+		DWORD dwFG = GetHighLightColor(i, FALSE);
+		wsprintf(wszKeyName, L"HighLightFG%d",i );
+		m_pRegSetting->WriteRegKey(wszKeyName, dwFG);
+	}
+}
+
+void CFilterPage::SetHighLightColor(int nIndex,DWORD color ,BOOL bBG /* = FALSE */)
+{
+	int nCurrentIndex = 2*nIndex;
+	if (bBG)
+	{
+		nCurrentIndex++;
+	}
+	m_dwHighLightColors[nCurrentIndex]= color;
+}
+
+DWORD CFilterPage::GetHighLightColor(int nIndex, BOOL bBG /* = FALSE */)
+{
+	int nCurrentIndex = 2*nIndex;
+	if (bBG)
+	{
+		nCurrentIndex++;
+	}
+	return m_dwHighLightColors[nCurrentIndex];
+}
+
+void CFilterPage::HandleChangeHighLoghtColorDialogFunction(BOOL bBG /* = FALSE */)
+{
+	CColorDialog ccd((COLORREF)GetHighLightColor(m_nEditNowSelect, bBG));
+	if (ccd.DoModal()==IDOK)
+	{
+		COLORREF color;
+		color = ccd.GetColor();   
+		SetHighLightColor(m_nEditNowSelect, (DWORD)color, bBG);
+	}
+	SaveHighLightColorsToRegKey();
+	OnCbnSelchangeComboHighlight();
+}
+
+void CFilterPage::OnBnClickedButtonBgColor()
+{
+	HandleChangeHighLoghtColorDialogFunction(TRUE);
+}
+
+void CFilterPage::OnBnClickedButtonFgColor()
+{
+	HandleChangeHighLoghtColorDialogFunction(FALSE);
 }
