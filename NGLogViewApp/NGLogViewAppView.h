@@ -97,6 +97,8 @@ public:
 	afx_msg void OnFileSaveAs();
 	afx_msg void OnEditFont();
 	afx_msg void OnProperties();
+public:
+	afx_msg void OnEditCopy();
 };
 
 #ifndef _DEBUG  // debug version in NGLogViewAppView.cpp
