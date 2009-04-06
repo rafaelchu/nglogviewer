@@ -128,7 +128,7 @@ private:
 
 	CLogFileLoaderCallback *m_CallbackObject;
 	
-	int CompareString(const wchar_t *s1, const wchar_t *s2);
+	int CompareStringBySelf(const wchar_t *s1, const wchar_t *s2);
 	const wchar_t * CheckSubString(const wchar_t *s1, const wchar_t *s2);
 
 	//Dirty function 
@@ -157,6 +157,8 @@ public:
 	int GetResultLine(int nLine, CLineBuffer **pCLineBuffer);	///< If m_bEnableRunBuffer == true
 
 	bool m_bEnableRunBuffer;
+
+	bool m_bPrintDebugMessage;
 
 	// Tags Filter
 	int SetTagsFilter(vector<wstring> *pTagsFilter);
