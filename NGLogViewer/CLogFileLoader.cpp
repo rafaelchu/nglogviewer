@@ -6,6 +6,48 @@ using namespace std;
 #include <string.h>
 #include <malloc.h>
 #include <tchar.h>
+#include <Windows.h>
+#include "..\Utility\Debug.h"
+#include "psapi.h"
+
+
+void PrintMemoryInfo( DWORD processID )
+{
+	HANDLE hProcess;
+	PROCESS_MEMORY_COUNTERS pmc;
+
+	// Print the process identifier.
+
+	dprintf( "\nProcess ID: %u\n", processID );
+
+	// Print information about the memory usage of the process.
+
+	hProcess = OpenProcess(  PROCESS_QUERY_INFORMATION,  FALSE, processID );
+	if (NULL == hProcess)
+		return;
+
+	if ( GetProcessMemoryInfo( hProcess, &pmc, sizeof(pmc)) )
+	{
+		dprintf( "\tPageFaultCount: 0x%08X\n", pmc.PageFaultCount );
+		dprintf( "\tPeakWorkingSetSize: 0x%08X\n",
+			pmc.PeakWorkingSetSize );
+		dprintf( "\tWorkingSetSize: %d K\nn", pmc.WorkingSetSize / 1024 );
+		dprintf( "\tQuotaPeakPagedPoolUsage: 0x%08X\n",
+			pmc.QuotaPeakPagedPoolUsage );
+		dprintf( "\tQuotaPagedPoolUsage: 0x%08X\n",
+			pmc.QuotaPagedPoolUsage );
+		dprintf( "\tQuotaPeakNonPagedPoolUsage: 0x%08X\n",
+			pmc.QuotaPeakNonPagedPoolUsage );
+		dprintf( "\tQuotaNonPagedPoolUsage: 0x%08X\n",
+			pmc.QuotaNonPagedPoolUsage );
+		dprintf( "\tPagefileUsage: 0x%08X\n", pmc.PagefileUsage );
+		dprintf( "\tPeakPagefileUsage: 0x%08X\n",
+			pmc.PeakPagefileUsage );
+	}
+
+	CloseHandle( hProcess );
+}
+
 
 wchar_t *wcsistr
 (
@@ -317,6 +359,7 @@ int CLogFileLoader::ClearAll()
 	m_pVecWstrFilterTags = NULL;
 	m_bReFilterDirtyBit = 0;
 	m_bEnableRunBuffer = false;
+	m_bPrintDebugMessage = true;
 	m_vecWstrFilterKeyWords.clear();
 	
 	for (int i = 0;i<m_vecpRunBuffer.size();++i)
@@ -396,6 +439,16 @@ int CLogFileLoader::RunFilterResult()
 		{
 			float fInput = ((float)llpos/nlength); 
 			m_CallbackObject->OnPercentCallback(fInput);
+		}
+
+		if (m_bPrintDebugMessage && (nIndex%100 ==0))
+		{
+			//Print memory
+
+			DWORD dwCurPID;
+			dwCurPID = GetCurrentProcessId();
+			dprintf("index = %d Current process id : %d\n", nIndex, dwCurPID);
+			PrintMemoryInfo( dwCurPID );
 		}
 	}
 
@@ -614,7 +667,7 @@ int CLogFileLoader::SetEnableFilterEmptyMessage(bool bInput)
 
 int CLogFileLoader::SetKeyWordExcludeFilter(const wchar_t *wstrKeyWords)
 {
-	if (CompareString(wstrKeyWords, m_wstrExclude.c_str())==0)
+	if (CompareStringBySelf(wstrKeyWords, m_wstrExclude.c_str())==0)
 	{
 		return 0;
 	}
@@ -646,7 +699,7 @@ int CLogFileLoader::SetKeyWordExcludeFilter(const wchar_t *wstrKeyWords)
 
 int CLogFileLoader::SetKeyWordIncludeFilter(const wchar_t *wstrKeyWords)
 {
-	if (CompareString(wstrKeyWords, m_wstrInclude.c_str())==0)
+	if (CompareStringBySelf(wstrKeyWords, m_wstrInclude.c_str())==0)
 	{
 		return 0;
 	}
@@ -654,8 +707,8 @@ int CLogFileLoader::SetKeyWordIncludeFilter(const wchar_t *wstrKeyWords)
 	m_wstrInclude=wstrKeyWords;
 	ClearKeyWordInclude();
 	if (wstrKeyWords == NULL || 
-		(CompareString(wstrKeyWords, L"*")==0) ||
-		(CompareString(wstrKeyWords, L"") ==0)
+		(CompareStringBySelf(wstrKeyWords, L"*")==0) ||
+		(CompareStringBySelf(wstrKeyWords, L"") ==0)
 		)
 	{
 		return 0;
@@ -702,7 +755,7 @@ void CLogFileLoader::SetEnableMatchCaseStringCompare(bool bInput)
 	m_bEnableMatchCaseStringCompare = bInput;
 }
 
-int CLogFileLoader::CompareString(const wchar_t *s1, const wchar_t *s2)
+int CLogFileLoader::CompareStringBySelf(const wchar_t *s1, const wchar_t *s2)
 {
 	if (m_bEnableMatchCaseStringCompare)
 		return wcscmp(s1,s2);
