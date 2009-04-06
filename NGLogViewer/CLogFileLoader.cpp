@@ -179,7 +179,7 @@ int CLogFileLoader::GetLineBufferData(wchar_t *wszBuffer, class CLineBuffer *pCL
 	
 	resultLineNumber = wcstok(wszBuffer, wszDelims );
 	resultTime = wcstok(NULL, wszDelims);
-	pCLineBuffer->m_wstrTimeString = resultTime;
+	pCLineBuffer->m_wstrTimeString = resultTime;	
 	wszBuffer = wcstok(NULL, wszDelims2);
 	if (NULL!=wcschr(resultTime, ':'))
 	{
@@ -316,6 +316,7 @@ int CLogFileLoader::ClearAll()
 	m_pVecIntFilterProcessNumber = NULL;
 	m_pVecWstrFilterTags = NULL;
 	m_bReFilterDirtyBit = 0;
+	m_bEnableRunBuffer = false;
 	m_vecWstrFilterKeyWords.clear();
 	
 	for (int i = 0;i<m_vecpRunBuffer.size();++i)
@@ -379,7 +380,10 @@ int CLogFileLoader::RunFilterResult()
 		{
 			m_setResultLine.insert(nIndex);
 			m_vecResultLinePos.push_back(llpos);
-			m_vecpRunBuffer.push_back(pCLineBuffer);
+			if (m_bEnableRunBuffer)
+				m_vecpRunBuffer.push_back(pCLineBuffer);
+			else
+				delete pCLineBuffer;
 		}
 		else
 		{
@@ -687,6 +691,8 @@ int CLogFileLoader::GetResultLine(int nLine, CLineBuffer **pCLineBuffer)
 		*pCLineBuffer = (CLineBuffer *)m_vecpRunBuffer[nLine];
 		return 0;
 	}
+
+
 	*pCLineBuffer=NULL;
 	return -1;
 }

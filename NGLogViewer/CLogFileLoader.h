@@ -83,6 +83,8 @@ private:
 	vector<class CLineBuffer*> m_vecpRunBuffer;
 
 
+
+
 	int m_nStartLineNumber;
 	int m_nEndLineNumber;
 
@@ -152,7 +154,10 @@ public:
 	int GetResultSize();
 	int GetResultLine(int nLine, CLineBuffer *pCLineBuffer);
 	int GetResultLine(int nLine, wchar_t *wszLineBuffer);
-	int GetResultLine(int nLine, CLineBuffer **pCLineBuffer);
+	int GetResultLine(int nLine, CLineBuffer **pCLineBuffer);	///< If m_bEnableRunBuffer == true
+
+	bool m_bEnableRunBuffer;
+
 	// Tags Filter
 	int SetTagsFilter(vector<wstring> *pTagsFilter);
 
@@ -190,6 +195,8 @@ public:
 	
 	// Set string compare function for match case or ignore case
 	void SetEnableMatchCaseStringCompare(bool bInput);
+
+
 };
 
 #endif
