@@ -60,7 +60,6 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="psapi.lib"
 				LinkIncremental="1"
 				GenerateDebugInformation="true"
 				SubSystem="1"
@@ -135,7 +134,6 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="psapi.lib"
 				LinkIncremental="1"
 				GenerateDebugInformation="true"
 				SubSystem="1"
@@ -186,10 +184,6 @@
 				>
 			</File>
 			<File
-				RelativePath="..\Utility\Debug.cpp"
-				>
-			</File>
-			<File
 				RelativePath=".\main.cpp"
 				>
 			</File>
@@ -209,10 +203,6 @@
 			</File>
 			<File
 				RelativePath="..\Utility\CRegSetting.h"
-				>
-			</File>
-			<File
-				RelativePath="..\Utility\Debug.h"
 				>
 			</File>
 			<File
