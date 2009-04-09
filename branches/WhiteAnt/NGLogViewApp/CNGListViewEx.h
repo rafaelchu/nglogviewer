@@ -12,7 +12,7 @@ using namespace std;
 
 typedef struct tagITEMINFO {
 	INT         nIndex;
-	CLineBuffer *m_cLineBuffer;
+	CLineBufferSharedPtr m_cLineBuffer;
 	COLORPAIR   colors;
 } ITEMINFO;
 
