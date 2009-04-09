@@ -1,0 +1,26 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 9.00
+# Visual Studio 2005
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "NGLogViewer", "NGLogViewer\NGLogViewer.vcproj", "{9504ACC5-D094-44A2-935C-5A3273A410BB}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "NGLogViewApp", "NGLogViewApp\NGLogViewApp.vcproj", "{AAC3241D-0C00-458E-A7A5-CC9DD2AB2DAE}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Win32 = Debug|Win32
+		Release|Win32 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{9504ACC5-D094-44A2-935C-5A3273A410BB}.Debug|Win32.ActiveCfg = Debug|Win32
+		{9504ACC5-D094-44A2-935C-5A3273A410BB}.Debug|Win32.Build.0 = Debug|Win32
+		{9504ACC5-D094-44A2-935C-5A3273A410BB}.Release|Win32.ActiveCfg = Release|Win32
+		{9504ACC5-D094-44A2-935C-5A3273A410BB}.Release|Win32.Build.0 = Release|Win32
+		{AAC3241D-0C00-458E-A7A5-CC9DD2AB2DAE}.Debug|Win32.ActiveCfg = Debug|Win32
+		{AAC3241D-0C00-458E-A7A5-CC9DD2AB2DAE}.Debug|Win32.Build.0 = Debug|Win32
+		{AAC3241D-0C00-458E-A7A5-CC9DD2AB2DAE}.Release|Win32.ActiveCfg = Release|Win32
+		{AAC3241D-0C00-458E-A7A5-CC9DD2AB2DAE}.Release|Win32.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
