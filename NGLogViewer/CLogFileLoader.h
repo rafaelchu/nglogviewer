@@ -9,7 +9,7 @@
 #include <algorithm>
 
 #include <set>
-
+#include <boost\shared_ptr.hpp>
 using namespace std;
 
 #ifdef WIN32
@@ -39,6 +39,8 @@ public:
 class CLineBuffer 
 {
 public:
+	CLineBuffer() {}
+public:
 	int m_nLineNumber;
 	int m_nProcess;
 	float m_fTime;
@@ -47,6 +49,8 @@ public:
 	wstring m_wstrMessage;
 	wstring m_wstrTimeString;
 };
+
+typedef boost::shared_ptr<CLineBuffer> CLineBufferSharedPtr;
 
 #define CLOGFILELOADER_DIRTYBIT_INCLUDE	1
 #define CLOGFILELOADER_DIRTYBIT_EXCLUDE 2
@@ -80,7 +84,9 @@ private:
 	vector<wstring>   m_vecWstrIncludeKerWords;
 	vector<int> * m_pVecIntFilterProcessNumber;
 
-	vector<class CLineBuffer*> m_vecpRunBuffer;
+	vector<int> m_vecRawResultLinePos;				// The file pointer position
+	vector<CLineBufferSharedPtr> m_vecRawData;		// The Data is totally same with the file
+	vector<CLineBufferSharedPtr> m_vecpRunBuffer;
 
 
 	int m_nStartLineNumber;
@@ -111,16 +117,16 @@ private:
 	int GetProcessNumber(wchar_t *wszBuffer);
 	float GetTime(wchar_t *wszBuffer);
 	int GetLineNumber(wchar_t *wszBuffer);
-	int GetLineBufferData(wchar_t *wszBuffer, class CLineBuffer *pCLineBuffer, bool bTag = true); 
+	int GetLineBufferData(wchar_t *wszBuffer, CLineBufferSharedPtr & LineBuffer_Ptr, bool bTag = true); 
 
 	//Filter function:
-	bool IsFilterLine(class CLineBuffer *pCLineBuffer);
-	bool IsFilterLineByLineNumber(class CLineBuffer *pCLineBuffer);
-	bool IsFilterLineByTime(class CLineBuffer *pCLineBuffer);
-	bool IsFilterLineByProcess(class CLineBuffer *pCLineBuffer);
-	bool IsFilterLineByTags(class CLineBuffer *pCLineBuffer);
-	bool IsFilterLineByExcludeKeyWords(class CLineBuffer *pCLineBuffer);
-	bool IsFilterLineByIncludeKeyWords(class CLineBuffer *pCLineBuffer);
+	bool IsFilterLine(CLineBufferSharedPtr & LineBuffer_Ptr);
+	bool IsFilterLineByLineNumber(CLineBufferSharedPtr & LineBuffer_Ptr);
+	bool IsFilterLineByTime(CLineBufferSharedPtr & LineBuffer_Ptr);
+	bool IsFilterLineByProcess(CLineBufferSharedPtr & LineBuffer_Ptr);
+	bool IsFilterLineByTags(CLineBufferSharedPtr & LineBuffer_Ptr);
+	bool IsFilterLineByExcludeKeyWords(CLineBufferSharedPtr & LineBuffer_Ptr);
+	bool IsFilterLineByIncludeKeyWords(CLineBufferSharedPtr & LineBuffer_Ptr);
 
 	bool IsEmptyString(const wchar_t * pwszStr);
 
@@ -143,6 +149,7 @@ public:
 	CLogFileLoader(wstring wstrFileName);
 	~CLogFileLoader();
 
+	int LoadFile();
 	int PreProcessing();
 	int ClearAll();
 	int ReSetFileName(wstring wstrFileName);
@@ -150,9 +157,9 @@ public:
 	vector<wstring> GetVecWstrTags();
 
 	int GetResultSize();
-	int GetResultLine(int nLine, CLineBuffer *pCLineBuffer);
+	int GetResultLine(int nLine, CLineBufferSharedPtr & LineBuffer_Ptr);
 	int GetResultLine(int nLine, wchar_t *wszLineBuffer);
-	int GetResultLine(int nLine, CLineBuffer **pCLineBuffer);
+	int GetResultLineEx(int nLine, CLineBufferSharedPtr & LineBuffer_Ptr);
 	// Tags Filter
 	int SetTagsFilter(vector<wstring> *pTagsFilter);
 
