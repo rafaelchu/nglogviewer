@@ -140,6 +140,8 @@ private:
 	wstring m_wstrExclude;
 	bool ClearKeyWordInclude();
 	bool ClearKeyWordExclude();
+
+    bool GetlineN(wifstream &fin, wchar_t *wszLineBuffer, size_t nSize);
 	
 public:
 	CLogFileLoader(wstring wstrFileName);

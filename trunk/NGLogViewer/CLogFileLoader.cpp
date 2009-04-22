@@ -110,7 +110,7 @@ int CLogFileLoader::PreProcessing()
 	class CLineBuffer *pCLineBuffer = new CLineBuffer();
 	int nIndex = 0;
 	
-	while(m_wiFile.getline(wszLineBuffer, LINE_BUFFER_SIZE))
+	while(GetlineN(m_wiFile, wszLineBuffer, LINE_BUFFER_SIZE))
 	{
 		if (IsHeaderLineOfLogfile(wszLineBuffer))
 			continue;
@@ -413,7 +413,8 @@ int CLogFileLoader::RunFilterResult()
 	m_wiFile.seekg (0, ios::beg);
 
 	int llpos = m_wiFile.tellg();
-	while(m_wiFile.getline(wszLineBuffer, LINE_BUFFER_SIZE))
+
+	while(GetlineN(m_wiFile, wszLineBuffer, LINE_BUFFER_SIZE))
 	{
 		if (IsHeaderLineOfLogfile(wszLineBuffer))
 			continue;
@@ -567,9 +568,18 @@ int CLogFileLoader::GetResultLine(int nLine, wchar_t *wszLineBuffer)
 {
 	int llPos = m_vecResultLinePos[nLine];
 	m_wiFile.seekg(llPos);
-	m_wiFile.getline(wszLineBuffer, LINE_BUFFER_SIZE);
+	GetlineN(m_wiFile, wszLineBuffer, LINE_BUFFER_SIZE);
 	m_wiFile.clear();
 	return 0;
+}
+
+bool CLogFileLoader::GetlineN(wifstream &fin, wchar_t *wszLineBuffer, size_t nSize)
+{
+    wstring wstrBuffer;
+    bool bRet =(bool) (getline(m_wiFile, wstrBuffer)!=NULL);
+    wcsncpy(wszLineBuffer,wstrBuffer.c_str(), nSize-1);
+    wszLineBuffer[nSize-1] =0;  
+    return bRet;
 }
 
 int CLogFileLoader::SetLineNumberFilter(int nStartLineNumber, int nEndLineNumber)
